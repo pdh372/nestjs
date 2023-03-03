@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
-import { ClassConstructor, plainToClass, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { ConfigService } from '@nestjs/config';
+import { IAppConfig } from '@interface/config.interface';
 interface IMyParseIntPipe {
     min?: number;
     max?: number;
@@ -49,16 +51,19 @@ export class MyParseIntPipe implements PipeTransform<string, number> {
 
 @Injectable()
 export class MyValidationPipe implements PipeTransform<any> {
-    // constructor(private className?: ClassConstructor<any>) {
-    //     console.log('pipe run');
-    // }
+    constructor(private config: ConfigService<IAppConfig>) {
+        console.log('🍺 Global pipe has been initialized');
+    }
 
-    async transform(value: any, { metatype }: ArgumentMetadata) {
-        console.log('pipe run');
+    async transform(value: any, { metatype, type }: ArgumentMetadata) {
+        if (this.config.get('debug_global_pipe')) {
+            console.log(`🐱 [${type.toUpperCase()}]`, value);
+        }
+
         if (!metatype || !this.toValidate(metatype)) {
             return value;
         }
-        // const object = this.className ? plainToClass(this.className, value) : plainToInstance(metatype, value);
+
         const object = plainToInstance(metatype, value);
 
         const errors = await validate(object);

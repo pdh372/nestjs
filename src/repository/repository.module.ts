@@ -35,10 +35,10 @@ export class RepositoryModule implements OnModuleInit {
     constructor(@InjectConnection() private connection: Connection, private config: ConfigService<IAppConfig>) {}
 
     onModuleInit() {
-        this.connection.set('debug', this.config.get('mongoose_debug'));
+        this.connection.set('debug', this.config.get('debug_mongoose'));
 
         console.info(
-            `🍺 mongodb connected! mongodb://${this.connection.host}:${this.connection.port}/${this.connection.db.namespace}`,
+            `🍺 mongodb connected! mongodb://${this.connection.host}:${this.connection.port}/${this.connection.db.namespace}\n`,
         );
     }
 }

@@ -15,7 +15,6 @@ export class UserController {
 
     @Post()
     createUser(@Body() body: any) {
-        // return this.repositories.User.create(body);;
-        return body;
+        return this.repositories.User.create(body);
     }
 }

@@ -4,5 +4,7 @@ export interface IAppConfig {
     node_env: INodeENV;
     port: number;
     mongodb_url: string;
-    mongoose_debug: boolean;
+    debug_mongoose: boolean;
+    debug_global_pipe: boolean;
+    debug_global_interceptor: boolean;
 }

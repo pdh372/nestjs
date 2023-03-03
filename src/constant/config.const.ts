@@ -6,7 +6,9 @@ export const APP_GLOBAL_CONFIG = (): IAppConfig => ({
     node_env: (process.env.NODE_ENV || 'development') as INodeENV,
     port: parseInt(process.env.PORT || '3000', 10),
     mongodb_url: process.env.DB_URI as string,
-    mongoose_debug: process.env.MONGOOSE_DEBUG === 'true',
+    debug_mongoose: process.env.DEBUG_MONGOOSE === 'true',
+    debug_global_pipe: process.env.DEBUG_GLOBAL_PIPE === 'true',
+    debug_global_interceptor: process.env.DEBUG_GLOBAL_INTERCEPTOR === 'true',
 });
 
 export const LOGGERS: LogLevel[] = ['error', 'warn', 'verbose', 'debug'];

@@ -15,7 +15,7 @@ import {
 import { Response } from 'express';
 import { CreateMovieDTO } from '@router/movie/movie.dto';
 import { validate } from 'class-validator';
-import { MyParseIntPipeWithCond, MyValidationPipe } from '@custom/pipe';
+import { MyParseIntPipeWithCond } from '@custom/pipe';
 
 @Controller('movie')
 export class MovieController {
@@ -75,7 +75,7 @@ export class MovieController {
     }
 
     @Post('old-2')
-    async createMovieOld2(@Body(new MyValidationPipe()) data: CreateMovieDTO) {
+    async createMovieOld2(@Body() data: CreateMovieDTO) {
         const newMovie = { _id: this._movies.length, ...data };
         this._movies.push(newMovie);
         return newMovie;
