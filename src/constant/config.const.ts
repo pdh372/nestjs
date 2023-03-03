@@ -11,4 +11,4 @@ export const APP_GLOBAL_CONFIG = (): IAppConfig => ({
 
 export const LOGGERS: LogLevel[] = ['error', 'warn', 'verbose', 'debug'];
 
-export const ENV_FILE_PATH = ['.env.development', '.env.staging', '.env.production', '.env.example'];
+export const ENV_FILE_PATH = ['.env.development', '.env.example', '.env.staging', '.env.pentest', '.env.production'];

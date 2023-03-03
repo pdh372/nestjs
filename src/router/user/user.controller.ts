@@ -9,12 +9,13 @@ export class UserController {
     @Get()
     async getListUser() {
         const users = await this.repositories.User.find().lean();
-        users.map(u => u.createdAt);
+
         return users;
     }
 
     @Post()
     createUser(@Body() body: any) {
-        return this.repositories.User.create(body);
+        // return this.repositories.User.create(body);;
+        return body;
     }
 }

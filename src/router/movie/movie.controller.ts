@@ -11,7 +11,6 @@ import {
     BadRequestException,
     ParseIntPipe,
     ValidationPipe,
-    UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateMovieDTO } from '@router/movie/movie.dto';
@@ -83,7 +82,7 @@ export class MovieController {
     }
 
     @Post('old-3')
-    @UsePipes(new MyValidationPipe(CreateMovieDTO))
+    // @UsePipes(new MyValidationPipe(CreateMovieDTO))
     async createMovieOld3(@Body() data: CreateMovieDTO) {
         const newMovie = { _id: this._movies.length, ...data };
         this._movies.push(newMovie);

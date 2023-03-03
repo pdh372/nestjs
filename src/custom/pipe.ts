@@ -49,13 +49,17 @@ export class MyParseIntPipe implements PipeTransform<string, number> {
 
 @Injectable()
 export class MyValidationPipe implements PipeTransform<any> {
-    constructor(private className?: ClassConstructor<any>) {}
+    // constructor(private className?: ClassConstructor<any>) {
+    //     console.log('pipe run');
+    // }
 
     async transform(value: any, { metatype }: ArgumentMetadata) {
+        console.log('pipe run');
         if (!metatype || !this.toValidate(metatype)) {
             return value;
         }
-        const object = this.className ? plainToClass(this.className, value) : plainToInstance(metatype, value);
+        // const object = this.className ? plainToClass(this.className, value) : plainToInstance(metatype, value);
+        const object = plainToInstance(metatype, value);
 
         const errors = await validate(object);
         if (errors.length > 0) {

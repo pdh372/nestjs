@@ -37,8 +37,8 @@ export class RepositoryModule implements OnModuleInit {
     onModuleInit() {
         this.connection.set('debug', this.config.get('mongoose_debug'));
 
-        console.log(
-            `📦 mongodb connected! mongodb://${this.connection.host}:${this.connection.port}/${this.connection.db.namespace}`,
+        console.info(
+            `🍺 mongodb connected! mongodb://${this.connection.host}:${this.connection.port}/${this.connection.db.namespace}`,
         );
     }
 }

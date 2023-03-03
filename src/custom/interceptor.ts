@@ -1,16 +1,22 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Request } from 'express';
-import { Observable } from 'rxjs';
+import { Request, Response } from 'express';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const request = context.switchToHttp().getRequest<Request>();
-        console.info(`[${request.method}] ${request.url}`);
-        // const response = context.switchToHttp().getResponse<Response>();
-        // const now = Date.now();
-        // console.info(`[${request.method}] ${request.url} - status: ${response.statusCode} - ${Date.now() - now}ms`);
-        return next.handle();
+        const response = context.switchToHttp().getResponse<Response>();
+        const now = Date.now();
+        console.info(`[INTERCEPTOR START]:: ${request.method} ${request.url}`);
+        return next.handle().pipe(
+            tap(() => {
+                // console.info(
+                //     `[${request.method}] ${request.url} - status: ${response.statusCode} - ${Date.now() - now}ms`,
+                // );
+                console.info(`[INTERCEPTOR END]  :: status: ${response.statusCode} - ${Date.now() - now}ms`);
+            }),
+        );
     }
 }
 
