@@ -1,6 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { logColor } from '@helper/chalk';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {
@@ -9,20 +10,21 @@ export class MorganInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse<Response>();
         const now = Date.now();
 
-        console.info(`🐱 [INTERCEPTOR START]`);
+        logColor(`🐱 [INTERCEPTOR START]`);
 
         return next.handle().pipe(
             tap(() => {
-                console.info(
+                logColor(
                     `🐱 [${request.method}] ${request.url} :: code: ${response.statusCode} - ${Date.now() - now}ms\n`,
                 );
             }),
-            catchError((err: any) => {
-                console.info(
-                    `🐱 [${request.method}] ${request.url} :: error: ${err.message} - ${Date.now() - now}ms\n`,
-                );
-                return throwError(() => err.message);
-            }),
+            // catchError((err: any) => {
+            //     logColor(
+            //         `🐱 [${request.method}] ${request.url} :: error: ${err.message} - ${Date.now() - now}ms\n`,
+            //     );
+            //     // return throwError(() => err.message);
+            //     return [err.message];
+            // }),
         );
     }
 }

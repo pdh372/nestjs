@@ -1,22 +1,37 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MorganInterceptor } from '@custom/interceptor';
-
-import { RepositoryModule } from '@repository/repository.module';
+import { ModelMongodbModule } from '@repository/mongodb/index.model';
 import { RouterModule } from '@router/router.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GLOBAL_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
-import { MyValidationPipe } from 'src/custom/pipe';
+import { MyValidationPipe } from '@custom/pipe';
+import { DataBaseModule } from '@helper/database';
+
+import { MainModule } from 'src/router/template/3_module/basic/main.module';
+import { GameModule } from 'src/router/template/3_module/dynamic/game.module';
+import { MyDynamicModule } from './router/template/3_module/dynamic/dynamic.module';
 
 @Module({
     imports: [
+        // config
         ConfigModule.forRoot({
             envFilePath: ENV_FILE_PATH,
             isGlobal: true,
             load: [APP_GLOBAL_CONFIG],
         }),
-        RepositoryModule,
+
+        // database
+        ModelMongodbModule,
+        DataBaseModule.registerMongodb(),
+
+        // routes
         RouterModule,
+        MainModule,
+
+        // lesson: module
+        MyDynamicModule.forRoot('database'),
+        GameModule,
     ],
     providers: [
         {
@@ -27,14 +42,6 @@ import { MyValidationPipe } from 'src/custom/pipe';
             provide: APP_PIPE,
             useClass: MyValidationPipe,
         },
-        // {
-        //     provide: APP_PIPE,
-        //     useValue: new ValidationPipe({
-        //         // disableErrorMessages: true,
-        //         transform: true,
-        //         whitelist: true,
-        //     }),
-        // },
     ],
 })
 export class AppModule {}

@@ -8,8 +8,8 @@ export class InterceptorController {
     @Get('/users-w1')
     getUsersW1() {
         // Inject @Res() must use res to response back
-        throw new NotFoundException('User not found');
-        // return this._database.users;
+        // throw new NotFoundException('User not found');
+        return this._database.users;
     }
 
     @Post('/users-w1')

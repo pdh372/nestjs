@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 
-import { RepositoryService } from '@repository/repository.service';
+import { MongodbService } from '@repository/mongodb/mongodb.service';
 
 @Controller({ path: 'user' })
 export class UserController {
-    constructor(private readonly repositories: RepositoryService) {}
+    constructor(private readonly repositories: MongodbService) {}
 
     @Get()
     async getListUser() {

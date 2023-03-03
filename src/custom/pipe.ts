@@ -4,6 +4,8 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { IAppConfig } from '@interface/config.interface';
+import { appColor } from '@helper/chalk';
+import { logColor } from '../helper/chalk';
 interface IMyParseIntPipe {
     min?: number;
     max?: number;
@@ -52,12 +54,12 @@ export class MyParseIntPipe implements PipeTransform<string, number> {
 @Injectable()
 export class MyValidationPipe implements PipeTransform<any> {
     constructor(private config: ConfigService<IAppConfig>) {
-        console.log('🍺 Global pipe has been initialized');
+        appColor('🍺 Global pipe initialized');
     }
 
     async transform(value: any, { metatype, type }: ArgumentMetadata) {
         if (this.config.get('debug_global_pipe')) {
-            console.log(`🐱 [${type.toUpperCase()}]`, value);
+            logColor(`🐱 [${type.toUpperCase()}]`, value);
         }
 
         if (!metatype || !this.toValidate(metatype)) {

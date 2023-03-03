@@ -20,7 +20,7 @@ const decrypt = (encrypted: string) => {
         const decrypted = decipher.update(encrypted, 'base64', 'utf8');
         return decrypted + decipher.final('utf8');
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return encrypted;
     }
 };
