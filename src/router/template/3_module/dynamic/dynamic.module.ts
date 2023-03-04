@@ -50,7 +50,7 @@ export class MyDynamicModule {
     private static buildStoreOptions(filename?: string, dir?: string) {
         return {
             dirname: dir || path.join(__dirname + `../../../../../../store`),
-            filename: filename || 'default',
+            filename: filename || 'default.txt',
         };
     }
 }

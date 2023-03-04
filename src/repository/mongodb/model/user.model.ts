@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Injectable, Module } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { decryptFields, encryptModel, decryptModel } from '@helper/encryption';
-
-const ENCRYPT_FIELDS = ['mobileNumber'];
+import { EncryptService } from '@helper/encryption';
+import { ICreateSchema } from '@interface/mongodb.interface';
 
 @Schema()
 export class User extends Document {
@@ -14,38 +14,57 @@ export class User extends Document {
     updatedAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User)
-    .set('versionKey', false)
-    .set('timestamps', { createdAt: true, updatedAt: true });
+@Injectable()
+export class UserModelService implements ICreateSchema {
+    private ENCRYPT_FIELDS = ['mobileNumber'];
+    constructor(private readonly encryptService: EncryptService) {}
 
-UserSchema.index({ mobileNumber: 1 }, { unique: true });
+    createSchema() {
+        const ENCRYPT_FIELDS = this.ENCRYPT_FIELDS;
+        const { encryptModel, decryptFields, decryptModel } = this.encryptService;
 
-// @ts-ignore
-UserSchema.pre(['find', 'findOne', 'countDocuments', 'exists'], function () {
-    ENCRYPT_FIELDS.forEach(field => {
+        const UserSchema = SchemaFactory.createForClass(User)
+            .set('versionKey', false)
+            .set('timestamps', { createdAt: true, updatedAt: true });
+
+        UserSchema.index({ mobileNumber: 1 }, { unique: true });
+
         // @ts-ignore
-        if (this._conditions[field]) this._conditions[field] = encryptModel(this._conditions[field]);
-    });
-});
+        UserSchema.pre(['find', 'findOne', 'countDocuments', 'exists'], function () {
+            ENCRYPT_FIELDS.forEach(field => {
+                // @ts-ignore
+                if (this._conditions[field]) this._conditions[field] = encryptModel(this._conditions[field]);
+            });
+        });
 
-// @ts-ignore
-UserSchema.pre('save', function () {
-    ENCRYPT_FIELDS.forEach(field => {
         // @ts-ignore
-        if (this[field]) this[field] = encryptModel(this[field]);
-    });
-});
+        UserSchema.pre('save', function () {
+            ENCRYPT_FIELDS.forEach(field => {
+                // @ts-ignore
+                if (this[field]) this[field] = encryptModel(this[field]);
+            });
+        });
 
-// @ts-ignore
-UserSchema.post('save', function () {
-    ENCRYPT_FIELDS.forEach(field => {
         // @ts-ignore
-        if (this && this[field]) this[field] = decryptModel(this[field]);
-    });
-});
-// @ts-ignore
-UserSchema.post('findById', decryptFields(ENCRYPT_FIELDS));
-UserSchema.post('findOne', decryptFields(ENCRYPT_FIELDS));
-UserSchema.post(['find'], function (result) {
-    result.map(decryptFields(ENCRYPT_FIELDS));
-});
+        UserSchema.post('save', function () {
+            ENCRYPT_FIELDS.forEach(field => {
+                // @ts-ignore
+                if (this && this[field]) this[field] = decryptModel(this[field]);
+            });
+        });
+        // @ts-ignore
+        UserSchema.post('findById', decryptFields(ENCRYPT_FIELDS));
+        UserSchema.post('findOne', decryptFields(ENCRYPT_FIELDS));
+        UserSchema.post(['find'], function (result) {
+            result.map(decryptFields(ENCRYPT_FIELDS));
+        });
+
+        return UserSchema;
+    }
+}
+
+@Module({
+    providers: [EncryptService, UserModelService],
+    exports: [UserModelService],
+})
+export class UserModelModule {}

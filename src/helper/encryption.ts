@@ -1,73 +1,90 @@
+import { IAppConfig } from '@interface/config.interface';
+import { Injectable, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
 
-const key = 'e0fbmmbrZoKbw5BZFo1LTi0SVWhBo3GD';
-const iv = 'W0cMY4tTLVeaJLaA';
+@Injectable()
+export class EncryptService {
+    constructor(private configService: ConfigService<IAppConfig>) {}
 
-const encrypt = (value: string) => {
-    if (!_.isString(value)) return value;
-    if (!value || value === 'null' || value === 'undefined') return '';
-    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-    let encrypted = cipher.update(value + '', 'utf8', 'base64');
-    encrypted += cipher.final('base64');
-    return encrypted;
-};
+    decryptModel = (value: any): any => {
+        switch (this.typeOf(value)) {
+            case 'array': {
+                return value.map(this.decryptModel);
+            }
+            case 'object': {
+                const keys = Object.keys(value);
+                return Object.fromEntries(keys.map(k => [k, this.decryptModel(value[k])]));
+            }
 
-const decrypt = (encrypted: string) => {
-    try {
-        if (!encrypted || encrypted === 'null' || encrypted === 'undefined') return '';
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        const decrypted = decipher.update(encrypted, 'base64', 'utf8');
-        return decrypted + decipher.final('utf8');
-    } catch (err) {
-        console.error(err);
+            default: {
+                return this.decrypt(value);
+            }
+        }
+    };
+
+    encryptModel = (value: any): any => {
+        switch (this.typeOf(value)) {
+            case 'array': {
+                return value.map(this.encryptModel);
+            }
+            case 'object': {
+                const keys = Object.keys(value);
+                return Object.fromEntries(keys.map(k => [k, this.encryptModel(value[k])]));
+            }
+
+            default: {
+                return this.encrypt(value);
+            }
+        }
+    };
+
+    decryptFields = (ENCRYPT_FIELDS: string[]) => {
+        return (data: { [x: string]: any }) => {
+            ENCRYPT_FIELDS.forEach(field => {
+                if (data && data[field]) data[field] = this.decryptModel(data[field]);
+            });
+        };
+    };
+
+    private typeOf = (value: any): 'string' | 'undefined' | 'symbol' | 'number' | 'null' | 'array' | 'object' => {
+        const str: string = Object.prototype.toString.call(value);
+        return str.slice(8, -1).toLowerCase() as any;
+    };
+
+    private encrypt(value: string) {
+        if (!_.isString(value)) return value;
+        if (!value || value === 'null' || value === 'undefined') return '';
+
+        const KEY = this.configService.get('cipher_key');
+        const IV = this.configService.get('cipher_iv');
+
+        const cipher = crypto.createCipheriv('aes-256-cbc', KEY, IV);
+
+        let encrypted = cipher.update(value + '', 'utf8', 'base64');
+        encrypted += cipher.final('base64');
         return encrypted;
     }
-};
 
-const typeOf = (value: any): 'string' | 'undefined' | 'symbol' | 'number' | 'null' | 'array' | 'object' => {
-    const str: string = Object.prototype.toString.call(value);
-    return str.slice(8, -1).toLowerCase() as any;
-};
+    private decrypt = (encrypted: string) => {
+        try {
+            if (!encrypted || encrypted === 'null' || encrypted === 'undefined') return '';
 
-const encryptModel = (value: any): any => {
-    switch (typeOf(value)) {
-        case 'array': {
-            return value.map(encryptModel);
-        }
-        case 'object': {
-            const keys = Object.keys(value);
-            return Object.fromEntries(keys.map(k => [k, encryptModel(value[k])]));
-        }
+            const KEY = this.configService.get('cipher_key');
+            const IV = this.configService.get('cipher_iv');
+            const decipher = crypto.createDecipheriv('aes-256-cbc', KEY, IV);
 
-        default: {
-            return encrypt(value);
+            const decrypted = decipher.update(encrypted, 'base64', 'utf8');
+            return decrypted + decipher.final('utf8');
+        } catch (err) {
+            console.error(err);
+            return encrypted;
         }
-    }
-};
-
-const decryptModel = (value: any): any => {
-    switch (typeOf(value)) {
-        case 'array': {
-            return value.map(decryptModel);
-        }
-        case 'object': {
-            const keys = Object.keys(value);
-            return Object.fromEntries(keys.map(k => [k, decryptModel(value[k])]));
-        }
-
-        default: {
-            return decrypt(value);
-        }
-    }
-};
-
-function decryptFields(ENCRYPT_FIELDS: string[]) {
-    return function (data: { [x: string]: any }) {
-        ENCRYPT_FIELDS.forEach(field => {
-            if (data && data[field]) data[field] = decryptModel(data[field]);
-        });
     };
 }
 
-export { decryptFields, encryptModel, decryptModel };
+@Module({
+    exports: [EncryptService],
+})
+export class EncryptModule {}

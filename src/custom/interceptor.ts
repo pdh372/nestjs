@@ -10,6 +10,7 @@ export class MorganInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse<Response>();
         const now = Date.now();
 
+        console.info('\n');
         logColor(`🐱 [INTERCEPTOR START]`);
 
         return next.handle().pipe(
