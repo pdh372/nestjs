@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
-import { fakeBasicData } from '@helper/fakeData';
+import { fakeBasicData } from '@helper/fakeData.helper';
 import { Response } from 'express';
 
 @Controller({ path: 'ctl' })

@@ -2,9 +2,9 @@
 import { Injectable, Module } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { EncryptService } from '@helper/encryption';
+import { EncryptService } from '@helper/encrypt.helper';
 import { ICreateSchema } from '@interface/mongodb.interface';
-import { EncryptModule } from '@helper/encryption';
+import { EncryptModule } from '@helper/encrypt.helper';
 
 @Schema()
 export class User extends Document {
@@ -24,9 +24,7 @@ export class UserModelService implements ICreateSchema {
         const ENCRYPT_FIELDS = this.ENCRYPT_FIELDS;
         const { encryptModel, decryptFields, decryptModel } = this.encryptService;
 
-        const UserSchema = SchemaFactory.createForClass(User)
-            .set('versionKey', false)
-            .set('timestamps', { createdAt: true, updatedAt: true });
+        const UserSchema = SchemaFactory.createForClass(User).set('timestamps', { createdAt: true, updatedAt: true });
 
         UserSchema.index({ mobileNumber: 1 }, { unique: true });
 

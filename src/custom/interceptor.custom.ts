@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Observable, tap } from 'rxjs';
-import { logColor } from '@helper/chalk';
+import { logColor } from '@helper/chalk.helper';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {

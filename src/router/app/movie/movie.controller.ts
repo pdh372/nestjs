@@ -13,9 +13,9 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { CreateMovieDTO } from '@router/movie/movie.dto';
+import { CreateMovieDTO } from '@router/app/movie/movie.dto';
 import { validate } from 'class-validator';
-import { MyParseIntPipeWithCond } from '@custom/pipe';
+import { MyParseIntPipeWithCond } from '@src/custom/pipe.custom';
 
 @Controller('movie')
 export class MovieController {

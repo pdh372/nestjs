@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { ModelService } from '@repository/mongodb/mongodb.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Global, Module } from '@nestjs/common';
 
 // models
 import { User, UserModelService, UserModelModule } from './model/user.model';
+import { Movie, MovieSchema } from './model/movie.model';
 
 @Global()
 @Module({
@@ -23,10 +24,10 @@ import { User, UserModelService, UserModelModule } from './model/user.model';
             },
         ]),
 
-        // If not encrypt anything
-        // MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
+        // If don't do anything
+        MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }]),
     ],
-    providers: [MongodbService],
-    exports: [MongodbService],
+    providers: [ModelService],
+    exports: [ModelService],
 })
-export class ModelMongodbModule {}
+export class ModelModule {}

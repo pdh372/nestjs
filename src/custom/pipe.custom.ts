@@ -2,8 +2,8 @@
 import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata, Inject } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { appColor } from '@helper/chalk';
-import { logColor } from '@helper/chalk';
+import { appColor } from '@helper/chalk.helper';
+import { logColor } from '@helper/chalk.helper';
 import { ConfigService } from '@nestjs/config';
 import { IConfigService } from '@interface/config.interface';
 interface IMyParseIntPipe {

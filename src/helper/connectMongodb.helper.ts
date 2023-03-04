@@ -2,7 +2,7 @@
 import { InjectConnection, MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import { Inject, Module, OnModuleInit } from '@nestjs/common';
-import { appColor } from '@helper/chalk';
+import { appColor } from '@helper/chalk.helper';
 import { Connection } from 'mongoose';
 import { IConfigService } from '@interface/config.interface';
 

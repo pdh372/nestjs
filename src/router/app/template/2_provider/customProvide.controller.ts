@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { fakeDatabaseURL } from '@helper/fakeData';
+import { fakeDatabaseURL } from '@helper/fakeData.helper';
 
 @Injectable()
 export class MyCustomProvide {

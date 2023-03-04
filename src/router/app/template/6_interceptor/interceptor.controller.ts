@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, NotFoundException } from '@nestjs/common';
-import { fakeBasicData } from '@helper/fakeData';
+import { fakeBasicData } from '@helper/fakeData.helper';
 
 @Controller('interceptor')
 export class InterceptorController {

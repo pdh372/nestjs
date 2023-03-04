@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { MorganInterceptor } from '@custom/interceptor';
-import { ModelMongodbModule } from '@repository/mongodb/index.model';
+import { MorganInterceptor } from '@src/custom/interceptor.custom';
+import { ModelModule } from '@repository/mongodb/mongodb.module';
 import { RouterModule } from '@router/router.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GLOBAL_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
-import { MyValidationPipe } from '@custom/pipe';
-import { DataBaseModule } from '@helper/database';
+import { MyValidationPipe } from '@src/custom/pipe.custom';
+import { DataBaseModule } from '@helper/database.helper';
 
-import { MainModule } from '@router/template/3_module/basic/main.module';
+import { MainModule } from '@router/app/template/3_module/basic/main.module';
 
 @Module({
     imports: [
@@ -21,7 +21,7 @@ import { MainModule } from '@router/template/3_module/basic/main.module';
 
         // database
         DataBaseModule.registerMongodb(),
-        ModelMongodbModule,
+        ModelModule,
 
         // routes
         RouterModule,

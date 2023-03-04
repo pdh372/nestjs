@@ -3,12 +3,12 @@ if (!process.env.IS_TS_NODE) {
 }
 // import '@module/template/2_provider/mindset';
 
-import { validateEnv } from '@helper/validateEnv';
+import { validateEnv } from '@helper/validateEnv.helpers';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LOGGERS } from '@constant/config.const';
 import { ConfigService } from '@nestjs/config';
-import { appColor } from '@helper/chalk';
+import { appColor } from '@helper/chalk.helper';
 import { IConfigService } from '@interface/config.interface';
 
 async function bootstrap() {

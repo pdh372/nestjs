@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ProviderController } from '@router/template/2_provider/provider.controller';
+import { ProviderController } from '@router/app/template/2_provider/provider.controller';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
-import { MyCustomProvide } from '@router/template/2_provider/customProvide.controller';
+import { MyCustomProvide } from '@router/app/template/2_provider/customProvide.controller';
 import { ILearnCustomProvide } from '@interface/useProvider.interface';
 
 const MY_CUSTOM: ILearnCustomProvide = {

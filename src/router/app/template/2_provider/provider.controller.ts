@@ -1,6 +1,6 @@
 import { MyCustomProvide } from './customProvide.controller';
 import { Controller, Get, Inject } from '@nestjs/common';
-import { fakeBasicData } from '@helper/fakeData';
+import { fakeBasicData } from '@helper/fakeData.helper';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
 import { ILearnCustomProvide } from '@interface/useProvider.interface';
 
