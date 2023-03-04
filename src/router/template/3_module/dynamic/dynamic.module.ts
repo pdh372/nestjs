@@ -1,6 +1,6 @@
 import { DynamicModule, Inject, Injectable, Module, Optional } from '@nestjs/common';
 import * as path from 'path';
-import * as INJECT_TOKEN from 'src/constant/injectionToken.const';
+import * as INJECT_TOKEN from '@constant/injectionToken.const';
 
 @Injectable()
 export class MyDynamicService {

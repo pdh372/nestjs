@@ -1,14 +1,15 @@
 if (!process.env.IS_TS_NODE) {
     require('module-alias/register');
 }
-import validateEnv from '@helper/validateEnv';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@src/app.module';
-import { LOGGERS } from '@constant/config.const';
 // import '@module/template/2_provider/mindset';
+
+import { validateEnv } from '@helper/validateEnv';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { LOGGERS } from '@constant/config.const';
 import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@interface/config.interface';
-import { appColor } from 'src/helper/chalk';
+import { appColor } from '@helper/chalk';
+import { IConfigService } from '@interface/config.interface';
 
 async function bootstrap() {
     validateEnv();
@@ -17,7 +18,7 @@ async function bootstrap() {
         logger: LOGGERS,
     });
 
-    const config = app.get(ConfigService<IAppConfig>);
+    const config: IConfigService = app.get(ConfigService);
     const env = config.get('node_env');
     await app.listen(+config.get('port'), async () => {
         const url = await app.getUrl();

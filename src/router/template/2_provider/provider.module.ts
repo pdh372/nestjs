@@ -2,8 +2,13 @@ import { Module } from '@nestjs/common';
 import { ProviderController } from '@router/template/2_provider/provider.controller';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
 import { MyCustomProvide } from '@router/template/2_provider/customProvide.controller';
-import { MY_CUSTOM } from '@constant/useValue.const';
-import { ILearnCustomProvide } from '@interface/injectToken.interface';
+import { ILearnCustomProvide } from '@interface/useProvider.interface';
+
+const MY_CUSTOM: ILearnCustomProvide = {
+    admin: 'admin@gmail',
+    password: '123456',
+    databaseUrl: '',
+};
 
 @Module({
     controllers: [ProviderController],

@@ -1,11 +1,11 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConnectMongodb } from './mongodb';
+import { ConnectMongodbModule } from './mongodb';
 
 @Module({})
 export class DataBaseModule {
     static registerMongodb(): DynamicModule {
         return {
-            module: ConnectMongodb,
+            module: ConnectMongodbModule,
         };
     }
 

@@ -4,6 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { EncryptService } from '@helper/encryption';
 import { ICreateSchema } from '@interface/mongodb.interface';
+import { EncryptModule } from '@helper/encryption';
 
 @Schema()
 export class User extends Document {
@@ -64,7 +65,8 @@ export class UserModelService implements ICreateSchema {
 }
 
 @Module({
-    providers: [EncryptService, UserModelService],
+    imports: [EncryptModule],
+    providers: [UserModelService],
     exports: [UserModelService],
 })
 export class UserModelModule {}

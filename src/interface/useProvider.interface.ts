@@ -3,3 +3,9 @@ export interface ILearnCustomProvide {
     password: string;
     databaseUrl: string;
 }
+
+// Encrypt
+export interface IInjectTokenEncrypt {
+    key: string;
+    iv: string;
+}

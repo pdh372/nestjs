@@ -8,9 +8,7 @@ import { APP_GLOBAL_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { MyValidationPipe } from '@custom/pipe';
 import { DataBaseModule } from '@helper/database';
 
-import { MainModule } from 'src/router/template/3_module/basic/main.module';
-import { GameModule } from 'src/router/template/3_module/dynamic/game.module';
-import { MyDynamicModule } from './router/template/3_module/dynamic/dynamic.module';
+import { MainModule } from '@router/template/3_module/basic/main.module';
 
 @Module({
     imports: [
@@ -22,16 +20,16 @@ import { MyDynamicModule } from './router/template/3_module/dynamic/dynamic.modu
         }),
 
         // database
-        ModelMongodbModule,
         DataBaseModule.registerMongodb(),
+        ModelMongodbModule,
 
         // routes
         RouterModule,
         MainModule,
 
         // lesson: module
-        MyDynamicModule.forRoot('database'),
-        GameModule,
+        // MyDynamicModule.forRoot('database'),
+        // GameModule,
     ],
     providers: [
         {

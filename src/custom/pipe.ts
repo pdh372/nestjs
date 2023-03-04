@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata } from '@nestjs/common';
+import { Injectable, PipeTransform, BadRequestException, ArgumentMetadata, Inject } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@interface/config.interface';
 import { appColor } from '@helper/chalk';
-import { logColor } from '../helper/chalk';
+import { logColor } from '@helper/chalk';
+import { ConfigService } from '@nestjs/config';
+import { IConfigService } from '@interface/config.interface';
 interface IMyParseIntPipe {
     min?: number;
     max?: number;
@@ -53,7 +53,7 @@ export class MyParseIntPipe implements PipeTransform<string, number> {
 
 @Injectable()
 export class MyValidationPipe implements PipeTransform<any> {
-    constructor(private config: ConfigService<IAppConfig>) {
+    constructor(@Inject(ConfigService) private readonly config: IConfigService) {
         appColor('🍺 Global pipe initialized');
     }
 

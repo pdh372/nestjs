@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 
 export interface IAppConfig {
@@ -14,3 +15,5 @@ export interface IAppConfig {
     cipher_key: string;
     cipher_iv: string;
 }
+
+export type IConfigService = ConfigService<IAppConfig>;

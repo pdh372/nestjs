@@ -2,7 +2,7 @@ import { MyCustomProvide } from './customProvide.controller';
 import { Controller, Get, Inject } from '@nestjs/common';
 import { fakeBasicData } from '@helper/fakeData';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
-import { ILearnCustomProvide } from '@interface/injectToken.interface';
+import { ILearnCustomProvide } from '@interface/useProvider.interface';
 
 @Controller({ path: 'provider' })
 export class ProviderController {

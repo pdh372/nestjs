@@ -11,3 +11,6 @@ export const IT_DYNAMIC_MODULE_INPUT: InjectionToken = Symbol('dynamic_module_di
 export const IT_DYNAMIC_MODULE_FILENAME = (filename: string): InjectionToken => {
     return 'dynamic_module_filename' + filename;
 };
+
+// Encrypt
+export const ENCRYPT: InjectionToken = Symbol('inject_token_encryptService');

@@ -1,12 +1,14 @@
-import { IAppConfig } from '@interface/config.interface';
-import { Injectable, Module } from '@nestjs/common';
+import { Inject, Injectable, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
+import * as INJECT_TOKEN from '@constant/injectionToken.const';
+import { IConfigService } from '@interface/config.interface';
+import { IInjectTokenEncrypt } from '@interface/useProvider.interface';
 
 @Injectable()
 export class EncryptService {
-    constructor(private configService: ConfigService<IAppConfig>) {}
+    constructor(@Inject(INJECT_TOKEN.ENCRYPT) private readonly cipher: IInjectTokenEncrypt) {}
 
     decryptModel = (value: any): any => {
         switch (this.typeOf(value)) {
@@ -57,13 +59,11 @@ export class EncryptService {
         if (!_.isString(value)) return value;
         if (!value || value === 'null' || value === 'undefined') return '';
 
-        const KEY = this.configService.get('cipher_key');
-        const IV = this.configService.get('cipher_iv');
-
-        const cipher = crypto.createCipheriv('aes-256-cbc', KEY, IV);
+        const cipher = crypto.createCipheriv('aes-256-cbc', this.cipher.key, this.cipher.iv);
 
         let encrypted = cipher.update(value + '', 'utf8', 'base64');
         encrypted += cipher.final('base64');
+
         return encrypted;
     }
 
@@ -71,11 +71,10 @@ export class EncryptService {
         try {
             if (!encrypted || encrypted === 'null' || encrypted === 'undefined') return '';
 
-            const KEY = this.configService.get('cipher_key');
-            const IV = this.configService.get('cipher_iv');
-            const decipher = crypto.createDecipheriv('aes-256-cbc', KEY, IV);
+            const decipher = crypto.createDecipheriv('aes-256-cbc', this.cipher.key, this.cipher.iv);
 
             const decrypted = decipher.update(encrypted, 'base64', 'utf8');
+
             return decrypted + decipher.final('utf8');
         } catch (err) {
             console.error(err);
@@ -85,6 +84,19 @@ export class EncryptService {
 }
 
 @Module({
+    providers: [
+        {
+            provide: INJECT_TOKEN.ENCRYPT,
+            useFactory: (configService: IConfigService): IInjectTokenEncrypt => {
+                return {
+                    key: configService.get('cipher_key') as string,
+                    iv: configService.get('cipher_iv') as string,
+                };
+            },
+            inject: [ConfigService],
+        },
+        EncryptService,
+    ],
     exports: [EncryptService],
 })
 export class EncryptModule {}
