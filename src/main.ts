@@ -1,28 +1,29 @@
 if (!process.env.IS_TS_NODE) {
     require('module-alias/register');
 }
-// import '@module/template/2_provider/mindset';
+// import '@router/app/template/2_provider/mindset';
 
 import { validateEnv } from '@helper/validateEnv.helpers';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LOGGERS } from '@constant/config.const';
-import { ConfigService } from '@nestjs/config';
 import { appColor } from '@helper/chalk.helper';
-import { IConfigService } from '@interface/config.interface';
+import { AppService } from './app.service';
 
 async function bootstrap() {
     validateEnv();
-
     const app = await NestFactory.create(AppModule, {
         logger: LOGGERS,
     });
+    const appService = app.get(AppService);
 
-    const config: IConfigService = app.get(ConfigService);
-    const env = config.get('node_env');
-    await app.listen(+config.get('port'), async () => {
+    // middlewares
+    app.enableCors(appService.corsOption);
+    app.use(appService.middlewares);
+
+    await app.listen(appService.port, async () => {
         const url = await app.getUrl();
-        appColor(`🍺 Server is running ${env} - ${url}`);
+        appColor(`🍺 Server is running ${appService.env} - ${url}`);
     });
 }
 bootstrap();

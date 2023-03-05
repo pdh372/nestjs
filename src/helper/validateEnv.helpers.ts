@@ -5,5 +5,6 @@ export const validateEnv = () => {
         NODE_ENV: str(),
         PORT: port(),
         DB_URI: str(),
+        CORS_ORIGINS: str(),
     });
 };

@@ -39,6 +39,9 @@
       "@repository/*": [
         "src/repository/*"
       ],
+      "@middleware/*": [
+        "src/middleware/*"
+      ],
     }
   }
 }

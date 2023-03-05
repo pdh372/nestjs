@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Validate } from 'class-validator';
 import { IsCustomSex } from '@src/custom/classValidator.custom';
-import { SEX } from '@constant/app.const';
+import { SEX } from '@src/constant/bussiness.const';
 
 export class CreateUserDTO {
     @IsString({ always: false })

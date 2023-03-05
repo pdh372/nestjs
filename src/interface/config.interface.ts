@@ -4,6 +4,7 @@ export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 export interface IAppConfig {
     node_env: INodeENV;
     port: number;
+    cors_origins: string;
 
     debug_mongoose_transaction: boolean;
     debug_mongoose_model: boolean;
