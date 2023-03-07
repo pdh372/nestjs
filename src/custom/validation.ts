@@ -1,6 +1,6 @@
 import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { SEX } from '@src/constant/bussiness.const';
+import { SEX } from '@constant/business.const';
 
 @ValidatorConstraint({ name: 'CheckSexValidator', async: true })
 @Injectable()

@@ -7,3 +7,7 @@ export const appColor = (...text: any[]) => {
 export const logColor = (...text: any[]) => {
     console.info(chalk.bgHex('000').green(util.inspect(text, { showHidden: false, depth: null, colors: true })));
 };
+
+export const errColor = (...text: any[]) => {
+    console.info(chalk.bgHex('EF1A11').white(util.inspect(text, { showHidden: false, depth: null, colors: true })));
+};

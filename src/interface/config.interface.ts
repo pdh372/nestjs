@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+
 export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 
 export interface IAppConfig {
@@ -15,6 +16,13 @@ export interface IAppConfig {
 
     cipher_key: string;
     cipher_iv: string;
+
+    useragent: boolean;
+    compression: boolean;
+    session_secret: string;
+    session_name?: string;
+    session_cookie_max_age: number;
+    session_store_expire: number;
 }
 
 export type IConfigService = ConfigService<IAppConfig>;

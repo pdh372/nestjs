@@ -3,7 +3,6 @@ if (!process.env.IS_TS_NODE) {
 }
 // import '@router/app/template/2_provider/mindset';
 
-import { validateEnv } from '@helper/validateEnv.helpers';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { LOGGERS } from '@constant/config.const';
@@ -11,7 +10,6 @@ import { appColor } from '@helper/chalk.helper';
 import { AppService } from './app.service';
 
 async function bootstrap() {
-    validateEnv();
     const app = await NestFactory.create(AppModule, {
         logger: LOGGERS,
     });

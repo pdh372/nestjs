@@ -9,13 +9,16 @@ import { MyValidationPipe } from '@src/custom/pipe.custom';
 import { DataBaseModule } from '@helper/database.helper';
 import { AppService } from './app.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { validateEnv2 } from 'src/helper/validateEnv.helpers';
 @Module({
     imports: [
         // config
         ConfigModule.forRoot({
+            validate: validateEnv2,
             envFilePath: ENV_FILE_PATH,
             isGlobal: true,
             load: [APP_DATA_CONFIG],
+            expandVariables: true,
         }),
 
         // database
@@ -24,8 +27,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
         // rate - limit
         ThrottlerModule.forRoot({
-            ttl: 10,
-            limit: 5,
+            ttl: 60,
+            limit: 100,
         }),
 
         // routes
