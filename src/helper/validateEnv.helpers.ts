@@ -1,9 +1,10 @@
-import { IsBoolean, IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsString, validateSync, IsOptional, IsNotEmpty } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ENV } from '@constant/config.const';
 import { errColor, appColor } from '@helper/chalk.helper';
 
 class EnvironmentVariables {
+    @IsNotEmpty()
     @IsString()
     APP_NAME: string;
 
@@ -13,41 +14,54 @@ class EnvironmentVariables {
     @IsNumber()
     PORT: number;
 
+    @IsOptional()
     @IsString({})
-    CORS_ORIGINS: string;
+    CORS_ORIGINS = '*';
 
     @IsBoolean()
-    DEBUG_MONGOOSE_TRANSACTION: boolean;
+    DEBUG_MONGOOSE_TRANSACTION: false;
     @IsBoolean()
-    DEBUG_MONGOOSE_MODEL: boolean;
+    DEBUG_MONGOOSE_MODEL: false;
     @IsBoolean()
-    DEBUG_GLOBAL_PIPE: boolean;
+    DEBUG_GLOBAL_PIPE: false;
     @IsBoolean()
-    DEBUG_GLOBAL_INTERCEPTOR: boolean;
+    DEBUG_GLOBAL_INTERCEPTOR: false;
 
     @IsString()
+    @IsNotEmpty()
     MONGODB_URI: string;
 
+    @IsNotEmpty()
     @IsString()
     CIPHER_KEY: string;
+    @IsNotEmpty()
     @IsString()
     CIPHER_IV: string;
 
+    @IsOptional()
     @IsBoolean()
-    USERAGENT: boolean;
+    USERAGENT: true;
+    @IsOptional()
     @IsBoolean()
-    COMPRESSION: boolean;
+    COMPRESSION: false;
 
+    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     SESSION_SECRET: string;
+    @IsNotEmpty()
+    @IsOptional()
+    @IsString()
     SESSION_NAME: string;
+    @IsOptional()
     @IsNumber()
-    SESSION_COOKIE_MAX_AGE: number;
+    SESSION_COOKIE_MAX_AGE: 86400000;
+    @IsOptional()
     @IsNumber()
-    SESSION_STORE_EXPIRE: number;
+    SESSION_STORE_EXPIRE: 172800;
 }
 
-export function validateEnv2(config: Record<string, unknown>) {
+export function validateEnvironment(config: Record<string, unknown>) {
     const validatedConfig = plainToInstance(EnvironmentVariables, config, { enableImplicitConversion: true });
     const errors = validateSync(validatedConfig, { skipMissingProperties: false });
 

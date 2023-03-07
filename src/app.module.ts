@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { MorganInterceptor } from '@src/custom/interceptor.custom';
+import { MorganInterceptor } from '@custom/interceptor.custom';
 import { ModelModule } from '@repository/mongodb/mongodb.module';
 import { RouterModule } from '@router/router.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
-import { MyValidationPipe } from '@src/custom/pipe.custom';
+import { MyValidationPipe } from '@custom/pipe.custom';
 import { DataBaseModule } from '@helper/database.helper';
 import { AppService } from './app.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { validateEnv2 } from 'src/helper/validateEnv.helpers';
+import { validateEnvironment } from '@helper/validateEnv.helpers';
 @Module({
     imports: [
         // config
         ConfigModule.forRoot({
-            validate: validateEnv2,
+            validate: validateEnvironment,
             envFilePath: ENV_FILE_PATH,
             isGlobal: true,
             load: [APP_DATA_CONFIG],

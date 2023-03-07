@@ -14,7 +14,7 @@ export class MiddlewareController {
 
     @Get('session')
     testSession(@Session() session: any, @Req() req: Request) {
-        session.temp = session.temp ? session.temp + 1 : 1;
-        return { session, _id: req.sessionID, cok: req.cookies, temp: session.temp, ip: req.ip };
+        // session.temp = session.temp ? session.temp + 1 : 1;
+        return { session, _id: req.sessionID, cok: req.cookies, temp: req.session, ip: req.ip };
     }
 }

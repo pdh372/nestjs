@@ -15,7 +15,7 @@ import {
 import { Response } from 'express';
 import { CreateMovieDTO } from '@router/app/movie/movie.dto';
 import { validate } from 'class-validator';
-import { MyParseIntPipeWithCond } from '@src/custom/pipe.custom';
+import { MyParseIntPipeWithCond } from '@custom/pipe.custom';
 
 @Controller('movie')
 export class MovieController {

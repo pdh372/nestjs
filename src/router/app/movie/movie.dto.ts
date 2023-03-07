@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsMongoId } from 'class-validator';
-import { GENRES } from '@src/constant/business.const';
+import { GENRES } from '@constant/business.const';
 
 export class CreateMovieDTO {
     @IsString()

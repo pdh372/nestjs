@@ -7,7 +7,8 @@ import helmet from 'helmet';
 import * as compression from 'compression';
 import * as session from 'express-session';
 import * as connectMongoDbSession from 'connect-mongodb-session';
-import { ENV } from 'src/constant/config.const';
+import { ENV } from '@constant/config.const';
+import { appColor } from './helper/chalk.helper';
 
 @Injectable()
 export class AppService {
@@ -66,9 +67,10 @@ export class AppService {
     }
 
     get corsOption() {
-        const corsOrigins = this.configService.get('cors_origins');
+        const corsOrigins = (this.configService.get('cors_origins') || '*').split(',');
+        appColor(`🍺 Cors allowed: ${corsOrigins.join(' --- ')}`);
         return {
-            origin: [...corsOrigins.split(',')],
+            origin: [...corsOrigins],
             credentials: true,
         };
     }

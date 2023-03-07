@@ -30,6 +30,6 @@ export class ConnectMongodbModule implements OnModuleInit {
     onModuleInit() {
         this.connection.set('debug', this.configService.get('debug_mongoose_transaction'));
         const str = `${this.connection.host}:${this.connection.port}/${this.connection.db.namespace}`;
-        appColor(`🍺 mongodb connected! mongodb://${str}`);
+        appColor(`🍺 Mongodb connected! mongodb://${str}`);
     }
 }
