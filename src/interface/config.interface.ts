@@ -23,6 +23,9 @@ export interface IAppConfig {
     session_name?: string;
     session_cookie_max_age?: number;
     session_store_expire?: number;
+
+    redis_url?: string;
+    redis_database?: number;
 }
 
 export type IConfigService = ConfigService<IAppConfig>;

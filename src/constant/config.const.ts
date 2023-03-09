@@ -23,6 +23,9 @@ export const APP_DATA_CONFIG = (): IAppConfig => ({
     session_name: process.env.SESSION_NAME,
     session_cookie_max_age: +(process.env.SESSION_COOKIE_MAX_AGE || 0),
     session_store_expire: +(process.env.SESSION_STORE_EXPIRE || 0),
+
+    redis_url: process.env.REDIS_URL,
+    redis_database: +(process.env.REDIS_DATABASE || 0),
 });
 
 export const LOGGERS: LogLevel[] = ['error', 'warn', 'verbose', 'debug'];

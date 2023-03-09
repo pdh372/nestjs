@@ -13,13 +13,14 @@ import { Movie } from '@repository/mongodb/model/movie.model';
 @Injectable()
 export class ModelService {
     constructor(
-        @Inject(ConfigService) private config: IConfigService,
+        @Inject(ConfigService) private configService: IConfigService,
         // @ts-ignore
         @InjectModel(User.name) private readonly userModel: Model<User>,
+
         // @ts-ignore
         @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
     ) {
-        if (this.config.get('debug_mongoose_model')) {
+        if (this.configService.get('debug_mongoose_model')) {
             setTimeout(() => {
                 // eslint-disable-next-line prefer-rest-params
                 const models = Object.values(arguments).filter(m => m.modelName);

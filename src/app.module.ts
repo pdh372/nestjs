@@ -22,8 +22,11 @@ import { validateEnvironment } from '@helper/validateEnv.helpers';
         }),
 
         // database
+        // mongodb
         DataBaseModule.registerMongodb(),
         ModelModule,
+        // redis
+        DataBaseModule.registerRedis(),
 
         // rate - limit
         ThrottlerModule.forRoot({

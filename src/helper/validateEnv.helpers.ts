@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsNumber, IsString, validateSync, IsOptional, IsNotEmpty } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { Transform, plainToInstance } from 'class-transformer';
 import { ENV } from '@constant/config.const';
 import { errColor, appColor } from '@helper/chalk.helper';
 
@@ -18,14 +18,18 @@ class EnvironmentVariables {
     @IsString({})
     CORS_ORIGINS = '*';
 
+    @Transform(t => t.value === 'true')
     @IsBoolean()
-    DEBUG_MONGOOSE_TRANSACTION: false;
+    DEBUG_MONGOOSE_TRANSACTION = false;
+    @Transform(t => t.value === 'true')
     @IsBoolean()
-    DEBUG_MONGOOSE_MODEL: false;
+    DEBUG_MONGOOSE_MODEL = false;
+    @Transform(t => t.value === 'true')
     @IsBoolean()
-    DEBUG_GLOBAL_PIPE: false;
+    DEBUG_GLOBAL_PIPE = false;
+    @Transform(t => t.value === 'true')
     @IsBoolean()
-    DEBUG_GLOBAL_INTERCEPTOR: false;
+    DEBUG_GLOBAL_INTERCEPTOR = false;
 
     @IsString()
     @IsNotEmpty()
@@ -40,10 +44,12 @@ class EnvironmentVariables {
 
     @IsOptional()
     @IsBoolean()
-    USERAGENT: true;
+    @Transform(t => t.value === 'true')
+    USERAGENT = true;
     @IsOptional()
     @IsBoolean()
-    COMPRESSION: false;
+    @Transform(t => t.value === 'true')
+    COMPRESSION = false;
 
     @IsNotEmpty()
     @IsOptional()
@@ -55,10 +61,22 @@ class EnvironmentVariables {
     SESSION_NAME: string;
     @IsOptional()
     @IsNumber()
-    SESSION_COOKIE_MAX_AGE: 86400000;
+    @Transform(t => +t.value)
+    SESSION_COOKIE_MAX_AGE = 86400000;
     @IsOptional()
     @IsNumber()
-    SESSION_STORE_EXPIRE: 172800;
+    @Transform(t => +t.value)
+    SESSION_STORE_EXPIRE = 172800;
+
+    @IsNotEmpty()
+    @IsOptional()
+    @IsString()
+    REDIS_URL: string;
+
+    @IsOptional()
+    @IsNumber()
+    @Transform(t => +t.value)
+    REDIS_DATABASE = 0;
 }
 
 export function validateEnvironment(config: Record<string, unknown>) {

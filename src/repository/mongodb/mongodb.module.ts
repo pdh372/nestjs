@@ -2,30 +2,16 @@
 import { ModelService } from '@repository/mongodb/mongodb.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Global, Module } from '@nestjs/common';
-
-// models
-import { User, UserModelService, UserModelModule } from './model/user.model';
-import { Movie, MovieSchema } from './model/movie.model';
+import { factories, models } from '@repository/mongodb/mongodb.helper';
 
 @Global()
 @Module({
     imports: [
-        // import models here:
-
         // If want handle middleware in mongoose, here how to handle it
-        MongooseModule.forFeatureAsync([
-            {
-                imports: [UserModelModule],
-                name: User.name,
-                useFactory: (userModelService: UserModelService) => {
-                    return userModelService.createSchema();
-                },
-                inject: [UserModelService],
-            },
-        ]),
+        MongooseModule.forFeatureAsync(factories),
 
         // If don't do anything
-        MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }]),
+        MongooseModule.forFeature(models),
     ],
     providers: [ModelService],
     exports: [ModelService],

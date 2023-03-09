@@ -42,6 +42,9 @@
       "@middleware/*": [
         "src/middleware/*"
       ],
+      "@module/*": [
+        "src/module/*"
+      ]
     }
   }
 }
