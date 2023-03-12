@@ -1,14 +1,15 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 
-import { ModelService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { RedisClientType } from 'redis';
 import { InjectRedisInstance } from 'src/module/redis/redis.helper';
+import * as INJECT_TOKEN from '@constant/injectionToken.const';
 
 @Controller({ path: 'user' })
 export class UserController {
     constructor(
-        private readonly repositories: ModelService,
-        @InjectRedisInstance('first') private readonly redis: RedisClientType,
+        private readonly repositories: MongodbService,
+        @InjectRedisInstance(INJECT_TOKEN.REDIS.WRITER) private readonly redis: RedisClientType,
     ) {}
 
     @Get()

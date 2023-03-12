@@ -11,7 +11,7 @@ import { User } from '@repository/mongodb/model/user.model';
 import { Movie } from '@repository/mongodb/model/movie.model';
 
 @Injectable()
-export class ModelService {
+export class MongodbService {
     constructor(
         @Inject(ConfigService) private configService: IConfigService,
         // @ts-ignore

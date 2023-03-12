@@ -1,26 +1,34 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ICreateNewInstance } from '@module/redis/redis.interface';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { hashToken } from '@module/redis/redis.helper';
-import { RedisService } from './redis.service';
+import { ICreateRedisInstance, IRedisModuleOption } from './redis.interface';
+import { newRedisClient } from './redis.service';
+import { ConfigService } from '@nestjs/config';
+import { IConfigService } from '@interface/config.interface';
 
+@Global()
 @Module({})
 export class RedisModule {
-    static forFeature(createNewInstance: ICreateNewInstance): DynamicModule {
-        const token = hashToken(createNewInstance.inject_token);
+    static forRoot(createNewInstance: IRedisModuleOption): DynamicModule {
+        const ITs = createNewInstance.configs.map(c => hashToken(c.it));
 
         return {
             module: RedisModule,
             providers: [
-                RedisService,
-                {
+                ...ITs.map((token, index) => ({
                     provide: token,
-                    useFactory: (redisService: RedisService) => {
-                        return redisService.newRedisClient(createNewInstance);
+                    useFactory: (configService: IConfigService) => {
+                        const config = createNewInstance.configs[index];
+                        const option: ICreateRedisInstance = {
+                            it: config.it,
+                            url: config.url || configService.get('redis_url'),
+                            database: config.database || configService.get('redis_database'),
+                        };
+                        return newRedisClient(option);
                     },
-                    inject: [RedisService],
-                },
+                    inject: [ConfigService],
+                })),
             ],
-            exports: [token],
+            exports: [...ITs],
         };
     }
 }

@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MorganInterceptor } from '@custom/interceptor.custom';
-import { ModelModule } from '@repository/mongodb/mongodb.module';
+import { MongodbModule } from '@repository/mongodb/mongodb.module';
 import { RouterModule } from '@router/router.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { MyValidationPipe } from '@custom/pipe.custom';
 import { DataBaseModule } from '@helper/database.helper';
 import { AppService } from './app.service';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { validateEnvironment } from '@helper/validateEnv.helpers';
+import { GatewayModule } from '@src/module/gateway/gateway.module';
+import { SOCKET_PROVIDERS } from '@socket/index.socket';
+import { RedisModule } from '@module/redis/redis.module';
+import * as INJECT_TOKEN from '@constant/injectionToken.const';
 @Module({
     imports: [
         // config
@@ -24,15 +27,9 @@ import { validateEnvironment } from '@helper/validateEnv.helpers';
         // database
         // mongodb
         DataBaseModule.registerMongodb(),
-        ModelModule,
+        MongodbModule,
         // redis
         DataBaseModule.registerRedis(),
-
-        // rate - limit
-        ThrottlerModule.forRoot({
-            ttl: 60,
-            limit: 100,
-        }),
 
         // routes
         RouterModule,
@@ -41,6 +38,19 @@ import { validateEnvironment } from '@helper/validateEnv.helpers';
         // lesson: module
         // MyDynamicModule.forRoot('database'),
         // GameModule,
+
+        // Socket
+        GatewayModule.forRoot({
+            providers: SOCKET_PROVIDERS,
+        }),
+
+        RedisModule.forRoot({
+            configs: [
+                { it: INJECT_TOKEN.REDIS.ADAPTER },
+                { it: INJECT_TOKEN.REDIS.WRITER },
+                { it: INJECT_TOKEN.REDIS.THROTTLER },
+            ],
+        }),
     ],
     providers: [
         AppService,
@@ -51,10 +61,6 @@ import { validateEnvironment } from '@helper/validateEnv.helpers';
         {
             provide: APP_PIPE,
             useClass: MyValidationPipe,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: ThrottlerGuard,
         },
     ],
 })

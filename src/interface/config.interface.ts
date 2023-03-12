@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 
 export interface IAppConfig {
+    app_name?: string;
     node_env?: INodeENV;
     port?: number;
     cors_origins?: string;

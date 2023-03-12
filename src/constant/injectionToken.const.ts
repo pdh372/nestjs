@@ -14,3 +14,12 @@ export const IT_DYNAMIC_MODULE_FILENAME = (filename: string): InjectionToken => 
 
 // Encrypt
 export const ENCRYPT: InjectionToken = Symbol('inject_token_encryptService');
+
+// REDIS
+type TITRedis = 'WRITER' | 'READER' | 'ADAPTER' | 'THROTTLER';
+export const REDIS: Record<TITRedis, InjectionToken> = {
+    WRITER: Symbol('writer'),
+    READER: Symbol('reader'),
+    ADAPTER: Symbol('adapter'),
+    THROTTLER: Symbol('throttler'),
+};

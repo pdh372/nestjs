@@ -44,6 +44,9 @@
       ],
       "@module/*": [
         "src/module/*"
+      ],
+      "@socket/*": [
+        "src/socket/*"
       ]
     }
   }

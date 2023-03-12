@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ModelService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Global, Module } from '@nestjs/common';
 import { factories, models } from '@repository/mongodb/mongodb.helper';
@@ -13,7 +13,7 @@ import { factories, models } from '@repository/mongodb/mongodb.helper';
         // If don't do anything
         MongooseModule.forFeature(models),
     ],
-    providers: [ModelService],
-    exports: [ModelService],
+    providers: [MongodbService],
+    exports: [MongodbService],
 })
-export class ModelModule {}
+export class MongodbModule {}

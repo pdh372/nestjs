@@ -3,6 +3,16 @@ import { Transform, plainToInstance } from 'class-transformer';
 import { ENV } from '@constant/config.const';
 import { errColor, appColor } from '@helper/chalk.helper';
 
+const stringToBoolean = (t: any) => {
+    if (t.value === 'true') return true;
+    return false;
+};
+
+const stringToNumber = (t: any) => {
+    if (isNaN(t.value)) return t.value;
+    return +t.value;
+};
+
 class EnvironmentVariables {
     @IsNotEmpty()
     @IsString()
@@ -14,20 +24,22 @@ class EnvironmentVariables {
     @IsNumber()
     PORT: number;
 
-    @IsOptional()
     @IsString({})
     CORS_ORIGINS = '*';
 
-    @Transform(t => t.value === 'true')
+    @Transform(stringToBoolean)
     @IsBoolean()
     DEBUG_MONGOOSE_TRANSACTION = false;
-    @Transform(t => t.value === 'true')
+
+    @Transform(stringToBoolean)
     @IsBoolean()
     DEBUG_MONGOOSE_MODEL = false;
-    @Transform(t => t.value === 'true')
+
+    @Transform(stringToBoolean)
     @IsBoolean()
     DEBUG_GLOBAL_PIPE = false;
-    @Transform(t => t.value === 'true')
+
+    @Transform(stringToBoolean)
     @IsBoolean()
     DEBUG_GLOBAL_INTERCEPTOR = false;
 
@@ -38,44 +50,42 @@ class EnvironmentVariables {
     @IsNotEmpty()
     @IsString()
     CIPHER_KEY: string;
+
     @IsNotEmpty()
     @IsString()
     CIPHER_IV: string;
 
-    @IsOptional()
     @IsBoolean()
-    @Transform(t => t.value === 'true')
+    @Transform(stringToBoolean)
     USERAGENT = true;
-    @IsOptional()
+
     @IsBoolean()
-    @Transform(t => t.value === 'true')
+    @Transform(stringToBoolean)
     COMPRESSION = false;
 
-    @IsNotEmpty()
     @IsOptional()
+    @IsNotEmpty()
     @IsString()
     SESSION_SECRET: string;
+
     @IsNotEmpty()
-    @IsOptional()
     @IsString()
     SESSION_NAME: string;
-    @IsOptional()
+
     @IsNumber()
-    @Transform(t => +t.value)
+    @Transform(stringToNumber)
     SESSION_COOKIE_MAX_AGE = 86400000;
-    @IsOptional()
+
     @IsNumber()
-    @Transform(t => +t.value)
+    @Transform(stringToNumber)
     SESSION_STORE_EXPIRE = 172800;
 
     @IsNotEmpty()
-    @IsOptional()
     @IsString()
     REDIS_URL: string;
 
-    @IsOptional()
     @IsNumber()
-    @Transform(t => +t.value)
+    @Transform(stringToNumber)
     REDIS_DATABASE = 0;
 }
 

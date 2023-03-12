@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { INestApplication, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as useragent from 'express-useragent';
 import * as hpp from 'hpp';
@@ -8,11 +8,18 @@ import * as compression from 'compression';
 import * as session from 'express-session';
 import * as connectMongoDbSession from 'connect-mongodb-session';
 import { ENV } from '@constant/config.const';
-import { appColor } from './helper/chalk.helper';
+import { appColor } from '@helper/chalk.helper';
+import { RedisIoAdapter } from '@module/gateway/gateway.adapter';
+import { RedisClientType } from 'redis';
+import { InjectRedisInstance } from '@module/redis/redis.helper';
+import * as INJECT_TOKEN from '@constant/injectionToken.const';
 
 @Injectable()
 export class AppService {
-    constructor(@Inject(ConfigService) private readonly configService: IConfigService) {}
+    constructor(
+        @Inject(ConfigService) private readonly configService: IConfigService,
+        @InjectRedisInstance(INJECT_TOKEN.REDIS.ADAPTER) private readonly redis: RedisClientType,
+    ) {}
 
     private get session() {
         const MongoDBStore = connectMongoDbSession(session);
@@ -106,5 +113,11 @@ export class AppService {
                 return compression.filter(req, res);
             },
         });
+    }
+
+    async socketAdapter(app: INestApplication) {
+        const redisIoAdapter = new RedisIoAdapter(app);
+        await redisIoAdapter.connectToRedis({ redis: this.redis, configService: this.configService });
+        return redisIoAdapter;
     }
 }
