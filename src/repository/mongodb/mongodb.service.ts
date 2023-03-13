@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 // models
 import { User } from '@repository/mongodb/model/user.model';
 import { Movie } from '@repository/mongodb/model/movie.model';
+import { ErrorLog } from '@repository/mongodb/model/errorLog.model';
 
 @Injectable()
 export class MongodbService {
@@ -19,6 +20,9 @@ export class MongodbService {
 
         // @ts-ignore
         @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
+
+        // @ts-ignore
+        @InjectModel(ErrorLog.name) private readonly errorLogModel: Model<ErrorLog>,
     ) {
         if (this.configService.get('debug_mongoose_model')) {
             setTimeout(() => {
@@ -39,5 +43,9 @@ export class MongodbService {
 
     get Movie() {
         return this.movieModel;
+    }
+
+    get ErrorLog() {
+        return this.errorLogModel;
     }
 }

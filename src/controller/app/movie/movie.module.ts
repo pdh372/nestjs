@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MovieController } from '@router/app/movie/movie.controller';
+import { MovieController } from '@src/controller/app/movie/movie.controller';
 
 @Module({
     controllers: [MovieController],

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, NotFoundException } from '@nestjs/common';
 
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { RedisClientType } from 'redis';
@@ -14,9 +14,12 @@ export class UserController {
 
     @Get()
     async getListUser() {
-        const users = await this.repositories.User.find().lean();
+        // const users = await this.repositories.User.find().lean();
         await this.redis.incr('huy');
-        return { users, huy: await this.redis.get('huy') };
+        const a = 1 as unknown as any;
+        const b = a.split('');
+        throw new NotFoundException('message_error_app', 'message_error_for_dev');
+        // return { users, huy: await this.redis.get('huy') };
     }
 
     @Post()

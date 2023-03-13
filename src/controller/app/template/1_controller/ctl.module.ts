@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CtlController } from '@router/app/template/1_controller/ctl.controller';
+import { CtlController } from '@src/controller/app/template/1_controller/ctl.controller';
 
 @Module({
     controllers: [CtlController],

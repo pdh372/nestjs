@@ -1,3 +1,4 @@
+// DEFAULT - SETUP
 import * as mongoose from 'mongoose';
 export interface ICreateSchema {
     createSchema(): mongoose.Schema;
@@ -9,3 +10,5 @@ export interface IAsyncModelFactory {
     useFactory: (modelService: ICreateSchema) => mongoose.Schema;
     inject: any[];
 }
+
+// APP

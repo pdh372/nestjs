@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConnectMongodbModule } from './connectMongodb.helper';
-import { RedisModule } from '@module/redis/redis.module';
 
 @Module({})
 export class DataBaseModule {
@@ -10,9 +9,9 @@ export class DataBaseModule {
         };
     }
 
-    static registerRedis(): DynamicModule {
-        return {
-            module: RedisModule,
-        };
-    }
+    // static registerPostgres(): DynamicModule {
+    //     return {
+    //         module: PostgresModule,
+    //     };
+    // }
 }

@@ -4,8 +4,7 @@ import { ENV } from '@constant/config.const';
 import { errColor, appColor } from '@helper/chalk.helper';
 
 const stringToBoolean = (t: any) => {
-    if (t.value === 'true') return true;
-    return false;
+    return t.value === 'true';
 };
 
 const stringToNumber = (t: any) => {

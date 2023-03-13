@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { MiddlewareController } from '@router/app/template/4_middleware/middleware.controller';
+import { MiddlewareController } from '@src/controller/app/template/4_middleware/middleware.controller';
 // import * as useragent from 'express-useragent';
 @Module({
     controllers: [MiddlewareController],

@@ -4,10 +4,10 @@ if (!process.env.IS_TS_NODE) {
 // import '@router/app/template/2_provider/mindset';
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@src/app.module';
 import { LOGGERS } from '@constant/config.const';
 import { appColor } from '@helper/chalk.helper';
-import { AppService } from './app.service';
+import { AppService } from '@src/app.service';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -18,7 +18,7 @@ async function bootstrap() {
     // middlewares
     app.enableCors(appService.corsOption);
     app.use(appService.middlewares);
-    app.useWebSocketAdapter(await appService.socketAdapter(app));
+    app.useWebSocketAdapter(await appService.createAdapter(app));
 
     await app.listen(appService.port, async () => {
         const url = await app.getUrl();

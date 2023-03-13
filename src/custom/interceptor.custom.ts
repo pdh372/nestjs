@@ -19,13 +19,6 @@ export class MorganInterceptor implements NestInterceptor {
                     `🐱 [${request.method}] ${request.url} :: code: ${response.statusCode} - ${Date.now() - now}ms\n`,
                 );
             }),
-            // catchError((err: any) => {
-            //     logColor(
-            //         `🐱 [${request.method}] ${request.url} :: error: ${err.message} - ${Date.now() - now}ms\n`,
-            //     );
-            //     // return throwError(() => err.message);
-            //     return [err.message];
-            // }),
         );
     }
 }

@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-
+// DEFAULT - SETUP
 export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 
 export interface IAppConfig {
@@ -30,3 +30,5 @@ export interface IAppConfig {
 }
 
 export type IConfigService = ConfigService<IAppConfig>;
+
+// APP

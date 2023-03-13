@@ -11,7 +11,7 @@ export class AuthGateway extends InitGateway implements OnGatewayInit {
     }
 
     afterInit(): void {
-        appColor(`🍺 Socket is running path = "${this.server.path}"`);
+        appColor(`🍺 Socket is running`);
         this.server.use(async (socket, next) => {
             // TODO check authen
             const auth = socket.handshake.auth;

@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { MorganInterceptor } from '@custom/interceptor.custom';
 import { MongodbModule } from '@repository/mongodb/mongodb.module';
-import { RouterModule } from '@router/router.module';
+import { ControllerModule } from '@controller/controller.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { MyValidationPipe } from '@custom/pipe.custom';
 import { DataBaseModule } from '@helper/database.helper';
 import { AppService } from './app.service';
 import { validateEnvironment } from '@helper/validateEnv.helpers';
-import { GatewayModule } from '@src/module/gateway/gateway.module';
+import { GatewayModule } from '@module/gateway/gateway.module';
 import { SOCKET_PROVIDERS } from '@socket/index.socket';
 import { RedisModule } from '@module/redis/redis.module';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
+import { AllExceptionsFilter } from '@custom/exceptionFilter';
 @Module({
     imports: [
-        // config
+        // ENV
         ConfigModule.forRoot({
             validate: validateEnvironment,
             envFilePath: ENV_FILE_PATH,
@@ -28,22 +29,16 @@ import * as INJECT_TOKEN from '@constant/injectionToken.const';
         // mongodb
         DataBaseModule.registerMongodb(),
         MongodbModule,
-        // redis
-        DataBaseModule.registerRedis(),
 
-        // routes
-        RouterModule,
-        // MainModule,
-
-        // lesson: module
-        // MyDynamicModule.forRoot('database'),
-        // GameModule,
+        // Controller
+        ControllerModule,
 
         // Socket
         GatewayModule.forRoot({
             providers: SOCKET_PROVIDERS,
         }),
 
+        // Cache
         RedisModule.forRoot({
             configs: [
                 { it: INJECT_TOKEN.REDIS.ADAPTER },
@@ -51,6 +46,11 @@ import * as INJECT_TOKEN from '@constant/injectionToken.const';
                 { it: INJECT_TOKEN.REDIS.THROTTLER },
             ],
         }),
+
+        // MainModule,
+        // lesson: module
+        // MyDynamicModule.forRoot('database'),
+        // GameModule,
     ],
     providers: [
         AppService,
@@ -61,6 +61,10 @@ import * as INJECT_TOKEN from '@constant/injectionToken.const';
         {
             provide: APP_PIPE,
             useClass: MyValidationPipe,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: AllExceptionsFilter,
         },
     ],
 })

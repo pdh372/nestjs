@@ -115,7 +115,7 @@ export class AppService {
         });
     }
 
-    async socketAdapter(app: INestApplication) {
+    async createAdapter(app: INestApplication) {
         const redisIoAdapter = new RedisIoAdapter(app);
         await redisIoAdapter.connectToRedis({ redis: this.redis, configService: this.configService });
         return redisIoAdapter;

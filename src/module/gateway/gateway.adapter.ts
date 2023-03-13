@@ -17,7 +17,7 @@ export class RedisIoAdapter extends IoAdapter {
     }
 
     createIOServer(port: number, options?: ServerOptions): any {
-        appColor(`🍺 Registered socket redis adapter`, options);
+        appColor(`🍺 Registered socket redis adapter`);
         const server = super.createIOServer(port, options);
         server.adapter(this.adapterConstructor);
         return server;

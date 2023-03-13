@@ -13,7 +13,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { CreateMovieDTO } from '@router/app/movie/movie.dto';
+import { CreateMovieDTO } from '@src/controller/app/movie/movie.dto';
 import { validate } from 'class-validator';
 import { MyParseIntPipeWithCond } from '@custom/pipe.custom';
 
