@@ -13,7 +13,7 @@ import { GatewayModule } from '@module/gateway/gateway.module';
 import { SOCKET_PROVIDERS } from '@socket/index.socket';
 import { RedisModule } from '@module/redis/redis.module';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
-import { AllExceptionsFilter } from '@custom/exceptionFilter';
+import { AllHttpExceptionsFilter } from '@custom/exceptionFilter';
 @Module({
     imports: [
         // ENV
@@ -64,7 +64,7 @@ import { AllExceptionsFilter } from '@custom/exceptionFilter';
         },
         {
             provide: APP_FILTER,
-            useClass: AllExceptionsFilter,
+            useClass: AllHttpExceptionsFilter,
         },
     ],
 })

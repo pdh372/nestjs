@@ -10,7 +10,7 @@ export const logColor = (...text: any[]) => {
 };
 
 export const socketColor = (...text: any[]) => {
-    console.info(chalk.bgHex('C95DAF').blue(util.inspect(text, { showHidden: false, depth: null, colors: true })));
+    console.info(chalk.bgHex('C15DA1').blue(text));
 };
 
 export const errColor = (...text: any[]) => {

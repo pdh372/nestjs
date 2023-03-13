@@ -14,8 +14,6 @@ export class AuthGateway extends InitGateway implements OnGatewayInit {
         appColor(`🍺 Socket is running`);
         this.server.use(async (socket, next) => {
             // TODO check authen
-            const auth = socket.handshake.auth;
-            console.log('Authentication', socket.id, auth);
 
             const user = { _id: '01', username: 1 };
 
@@ -28,9 +26,10 @@ export class AuthGateway extends InitGateway implements OnGatewayInit {
 
     @SubscribeMessage('new-message')
     handleNextAction(@MessageBody() body: any, @ConnectedSocket() client: Socket) {
+        const a = 1 as unknown as any;
+        const b = a.split('');
         this.server.emit('response-event', `you are sent ${body}???`);
-
-        client.emit('me', client.data);
+        client.emit('me', client.data, b);
     }
 
     // @SubscribeMessage('join-room-notify')

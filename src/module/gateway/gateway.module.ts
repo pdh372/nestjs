@@ -3,18 +3,21 @@ import { WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketSe
 import { Socket, Server } from 'socket.io';
 import { socketColor } from '@helper/chalk.helper';
 import { IGatewayModuleOption } from '@module/gateway/gateway.interface';
+import { UseFilters } from '@nestjs/common';
+import { AllWsExceptionsFilter } from '@custom/exceptionFilter';
 
+@UseFilters(AllWsExceptionsFilter)
 @WebSocketGateway()
 export class InitGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
     protected server: Server;
 
     handleConnection(client: Socket) {
-        socketColor('Client connected', client.id);
+        socketColor(`Socket connected id = ${client.id} --- userId = ${client.data.user?._id}`);
     }
 
     handleDisconnect(client: Socket) {
-        socketColor('Client disconnected', client.id);
+        socketColor(`Socket disconnected id = ${client.id} --- userId =${client.data.user?._id}`);
     }
 }
 
