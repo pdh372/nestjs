@@ -1,6 +1,8 @@
 import { LogLevel } from '@nestjs/common';
 import { IAppConfig } from '@interface/config.interface';
 import { INodeENV } from '@interface/config.interface';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export const APP_DATA_CONFIG = (): IAppConfig => ({
     app_name: process.env.APP_NAME,
@@ -10,7 +12,7 @@ export const APP_DATA_CONFIG = (): IAppConfig => ({
 
     debug_mongoose_transaction: process.env.DEBUG_MONGOOSE_TRANSACTION === 'true',
     debug_mongoose_model: process.env.DEBUG_MONGOOSE_MODEL === 'true',
-    debug_global_pipe: process.env.DEBUG_GLOBAL_PIPE === 'true',
+    debug_global_request_data: process.env.DEBUG_GLOBAL_REQUEST_DATA === 'true',
     debug_global_interceptor: process.env.DEBUG_GLOBAL_INTERCEPTOR === 'true',
 
     mongodb_url: process.env.MONGODB_URI,
@@ -27,6 +29,13 @@ export const APP_DATA_CONFIG = (): IAppConfig => ({
 
     redis_url: process.env.REDIS_URL,
     redis_database: +(process.env.REDIS_DATABASE || 0),
+
+    keys: {
+        user: {
+            private_key: fs.readFileSync(path.join(__dirname, '../keys/user/rsa.private')),
+            public_key: fs.readFileSync(path.join(__dirname, '../keys/user/rsa.public')),
+        },
+    },
 });
 
 export const LOGGERS: LogLevel[] = ['error', 'warn', 'verbose', 'debug'];

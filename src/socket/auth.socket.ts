@@ -28,7 +28,7 @@ export class AuthGateway extends InitGateway implements OnGatewayInit {
     handleNextAction(@MessageBody() body: any, @ConnectedSocket() client: Socket) {
         const a = 1 as unknown as any;
         const b = a.split('');
-        this.server.emit('response-event', `you are sent ${body}???`);
+        this.server.emit('response-event', `you are sent 2 ${body}???`);
         client.emit('me', client.data, b);
     }
 

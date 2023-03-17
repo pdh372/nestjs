@@ -1,24 +1,36 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Observable, tap } from 'rxjs';
-import { logColor } from '@helper/chalk.helper';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { logColor, errColor } from '@helper/chalk.helper';
+import { ConfigService } from '@nestjs/config';
+import { IConfigService } from '@interface/config.interface';
+import * as _ from 'lodash';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {
+    constructor(@Inject(ConfigService) private readonly configService: IConfigService) {}
+
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        const request = context.switchToHttp().getRequest<Request>();
-        const response = context.switchToHttp().getResponse<Response>();
+        const req = context.switchToHttp().getRequest<Request>();
+        const res = context.switchToHttp().getResponse<Response>();
         const now = Date.now();
 
         console.info('\n');
-        logColor(`🐱 [INTERCEPTOR START]`);
+        if (this.configService.get('debug_global_request_data')) {
+            if (!_.isEmpty(req.body)) logColor('[BODY] = ', req.body);
+            if (!_.isEmpty(req.query)) logColor('[QUERY] = ', req.query);
+            if (!_.isEmpty(req.params)) logColor('[PARAMS] = ', req.params);
+        }
 
         return next.handle().pipe(
             tap(() => {
-                logColor(
-                    `🐱 [${request.method}] ${request.url} :: code: ${response.statusCode} - ${Date.now() - now}ms\n`,
-                );
+                logColor(`[${req.method}] ${req.url} :: code: ${res.statusCode} - ${Date.now() - now}ms\n`);
             }),
+            catchError(err => {
+                errColor(`[${req.method}] ${req.url} :: ${Date.now() - now}ms\n`);
+                return throwError(() => err);
+            }),
+            map(data => ({ statusCode: res.statusCode, data })),
         );
     }
 }

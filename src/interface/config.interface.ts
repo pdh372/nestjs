@@ -10,7 +10,7 @@ export interface IAppConfig {
 
     debug_mongoose_transaction?: boolean;
     debug_mongoose_model?: boolean;
-    debug_global_pipe?: boolean;
+    debug_global_request_data?: boolean;
     debug_global_interceptor?: boolean;
 
     mongodb_url?: string;
@@ -27,6 +27,13 @@ export interface IAppConfig {
 
     redis_url?: string;
     redis_database?: number;
+
+    keys: {
+        user: {
+            private_key: Buffer;
+            public_key: Buffer;
+        };
+    };
 }
 
 export type IConfigService = ConfigService<IAppConfig>;

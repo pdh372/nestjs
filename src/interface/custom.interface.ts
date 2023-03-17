@@ -1,12 +1,11 @@
-import { AbstractHttpAdapter } from '@nestjs/core';
 import { IAppReq } from '@interface/express.interface';
 import { Socket } from 'socket.io';
-import { ArgumentsHost } from '@nestjs/common';
+import { ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
 
 export interface IWriteHttpErrorLog {
     req: IAppReq;
     error: unknown;
-    httpAdapter: AbstractHttpAdapter<any, any, any>;
+    host: ArgumentsHost;
 }
 
 export interface IWriteWsErrorLog {
@@ -14,4 +13,16 @@ export interface IWriteWsErrorLog {
     data: any;
     error: unknown;
     host: ArgumentsHost;
+}
+
+export interface ILogInternal {
+    httpCode: HttpStatus;
+    req: IAppReq;
+    error: unknown;
+    host: ArgumentsHost;
+}
+
+export interface ILogValidate {
+    error: unknown;
+    exception: HttpException;
 }

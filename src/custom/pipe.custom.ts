@@ -58,9 +58,7 @@ export class MyValidationPipe implements PipeTransform<any> {
     }
 
     async transform(value: any, { metatype, type }: ArgumentMetadata) {
-        if (this.config.get('debug_global_pipe')) {
-            logColor(`🐱 [${type.toUpperCase()}]`, value);
-        }
+        logColor(`🐱 [${type.toUpperCase()}]`, value);
 
         if (!metatype || !this.toValidate(metatype)) {
             return value;

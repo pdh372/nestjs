@@ -19,6 +19,8 @@ import { IWriteHttpErrorLog } from '@interface/custom.interface';
 import { Socket } from 'socket.io';
 import { IWriteWsErrorLog } from '@interface/custom.interface';
 import { EVENT_PUB } from '@constant/eventSocket.const';
+import { BadRequestException } from '@nestjs/common';
+import { ILogInternal, ILogValidate } from 'src/interface/custom.interface';
 
 @Catch()
 export class AllHttpExceptionsFilter implements ExceptionFilter {
@@ -32,46 +34,65 @@ export class AllHttpExceptionsFilter implements ExceptionFilter {
         const exception = error instanceof HttpException ? error : new InternalServerErrorException();
 
         const { httpAdapter } = this.httpAdapterHost;
-        const ctx = host.switchToHttp();
-        const req = ctx.getRequest<IAppReq>();
-        const res = ctx.getResponse<Response>();
+        const { res, req } = this.getContext(host);
 
         const httpCode = exception.getStatus();
 
-        let errorLog;
-        if (httpCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-            errorLog = await this.writeErrorLog({ req, error, httpAdapter });
-        }
+        const errorLog = await this.showLogInternalDetail({ httpCode, req, error, host });
+        const errorValidate = this.showLogValidateDetail({ exception, error });
 
         const responsePayload = {
             statusCode: httpCode,
-            message: exception.message,
-            errorId: errorLog?.errorId,
-            errorDev: errorLog?.errorDev,
+            errorMessage: exception.message,
+            errorLog,
+            errorValidate,
         };
 
         httpAdapter.reply(res, responsePayload, httpCode);
     }
 
     private async writeErrorLog(param: IWriteHttpErrorLog) {
-        const { req, httpAdapter, error } = param;
+        const { req, host, error } = param;
         const errorLog = await this.models.ErrorLog.create({
-            path: httpAdapter.getRequestUrl(req) || req.path,
+            path: req.path,
             errorDetail: error,
             query: req.query,
             metadata: {
-                method: httpAdapter.getRequestMethod(req) || req.method,
+                method: req.method,
                 params: req.params,
                 body: req.body,
                 user: req.user,
             },
-            contextType: httpAdapter.getType(),
+            contextType: host.getType(),
         });
 
         return {
             errorId: this.configService.get('node_env') === ENV.Staging ? errorLog?._id : undefined,
             errorDev: this.configService.get('node_env') === ENV.Development ? errorLog : undefined,
         };
+    }
+
+    private getContext(host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        return {
+            req: ctx.getRequest<IAppReq>(),
+            res: ctx.getResponse<Response>(),
+        };
+    }
+
+    private async showLogInternalDetail({ httpCode, req, error, host }: ILogInternal) {
+        if (httpCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            return await this.writeErrorLog({ req, error, host });
+        }
+    }
+
+    private showLogValidateDetail({ exception, error }: ILogValidate) {
+        if (
+            [ENV.Development, ENV.Staging].includes(this.configService.get('node_env') as ENV) &&
+            error instanceof BadRequestException
+        ) {
+            return (exception.getResponse() as unknown as any)?.message;
+        }
     }
 }
 
