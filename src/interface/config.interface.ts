@@ -29,7 +29,7 @@ export interface IAppConfig {
     redis_database?: number;
 
     keys: {
-        user: {
+        user?: {
             private_key: Buffer;
             public_key: Buffer;
         };

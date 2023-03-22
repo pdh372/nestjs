@@ -32,8 +32,8 @@ export const APP_DATA_CONFIG = (): IAppConfig => ({
 
     keys: {
         user: {
-            private_key: fs.readFileSync(path.join(__dirname, '../keys/user/rsa.private')),
-            public_key: fs.readFileSync(path.join(__dirname, '../keys/user/rsa.public')),
+            private_key: fs.readFileSync(path.join(__dirname, '../../keys/user/private.key')),
+            public_key: fs.readFileSync(path.join(__dirname, '../../keys/user/public.key')),
         },
     },
 });

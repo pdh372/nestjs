@@ -17,9 +17,9 @@ export class MorganInterceptor implements NestInterceptor {
 
         console.info('\n');
         if (this.configService.get('debug_global_request_data')) {
-            if (!_.isEmpty(req.body)) logColor('[BODY] = ', req.body);
-            if (!_.isEmpty(req.query)) logColor('[QUERY] = ', req.query);
-            if (!_.isEmpty(req.params)) logColor('[PARAMS] = ', req.params);
+            if (!_.isEmpty(req.body)) logColor('[BODY] = ' + JSON.stringify(req.body));
+            if (!_.isEmpty(req.query)) logColor('[QUERY] = ' + JSON.stringify(req.query));
+            if (!_.isEmpty(req.params)) logColor('[PARAMS] = ' + JSON.stringify(req.params));
         }
 
         return next.handle().pipe(

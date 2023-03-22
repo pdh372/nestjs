@@ -82,7 +82,9 @@ export class AllHttpExceptionsFilter implements ExceptionFilter {
 
     private async showLogInternalDetail({ httpCode, req, error, host }: ILogInternal) {
         if (httpCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-            return await this.writeErrorLog({ req, error, host });
+            const data = await this.writeErrorLog({ req, error, host });
+            if (!Object.values(data).filter(Boolean).length) return undefined;
+            return data;
         }
     }
 
