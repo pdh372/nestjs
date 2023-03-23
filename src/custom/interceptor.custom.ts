@@ -23,10 +23,10 @@ export class MorganInterceptor implements NestInterceptor {
 
         return next.handle().pipe(
             tap(() => {
-                logColor(`[${req.method}] ${req.url} :: code: ${res.statusCode} - ${Date.now() - now}ms\n`);
+                logColor(`[${req.method}] ${req.url} :: code: ${res.statusCode} - ${Date.now() - now}ms`);
             }),
             catchError(err => {
-                errColor(`[${req.method}] ${req.url} :: ${Date.now() - now}ms\n`);
+                errColor(`[${req.method}] ${req.url} :: ${Date.now() - now}ms`);
                 return throwError(() => err);
             }),
             map(body => ({ statusCode: res.statusCode, body })),

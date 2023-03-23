@@ -86,6 +86,14 @@ class EnvironmentVariables {
     @IsNumber()
     @Transform(stringToNumber)
     REDIS_DATABASE = 0;
+
+    // KEYs FOR USER
+    @IsString()
+    JWT_PRIVATE_KEY: string;
+    @IsString()
+    JWT_PUBLIC_KEY: string;
+    @IsString()
+    JWT_SECRET_KEY: string;
 }
 
 export function validateEnvironment(config: Record<string, unknown>) {

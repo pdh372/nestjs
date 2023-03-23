@@ -3,6 +3,6 @@ import { TemplateModule } from '@src/api/controller/template/template.module';
 import { AuthModule } from '@controller/auth/auth.module';
 
 @Module({
-    imports: [AuthModule, TemplateModule],
+    imports: [AuthModule.register(), TemplateModule],
 })
 export class ControllerModule {}

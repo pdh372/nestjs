@@ -28,11 +28,14 @@ export interface IAppConfig {
     redis_url?: string;
     redis_database?: number;
 
-    keys: {
+    refresh_token: {
         user?: {
-            private_key: Buffer;
-            public_key: Buffer;
+            private_key?: Buffer;
+            public_key?: Buffer;
         };
+    };
+    access_token: {
+        user?: string;
     };
 }
 
