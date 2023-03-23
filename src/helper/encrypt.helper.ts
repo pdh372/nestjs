@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Inject, Injectable, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
@@ -5,19 +6,56 @@ import * as _ from 'lodash';
 import * as INJECT_TOKEN from '@constant/injectionToken.const';
 import { IConfigService } from '@interface/config.interface';
 import { IInjectTokenEncrypt } from '@interface/useProvider.interface';
+import { Schema } from 'mongoose';
 
 @Injectable()
 export class EncryptService {
     constructor(@Inject(INJECT_TOKEN.ENCRYPT) private readonly cipher: IInjectTokenEncrypt) {}
 
-    decryptModel = (value: any): any => {
+    encryptSchema = ({ schema, fields }: { schema: Schema; fields: string[] }) => {
+        const { sanitizeEncrypt, sanitizeDecrypt, decryptFields } = this;
+        // @ts-ignore
+        schema.pre(['find', 'findOne', 'countDocuments', 'exists'], function () {
+            fields.forEach(field => {
+                // @ts-ignore
+                if (this._conditions[field]) this._conditions[field] = sanitizeEncrypt(this._conditions[field]);
+            });
+        });
+
+        // @ts-ignore
+        schema.pre('save', function () {
+            fields.forEach(field => {
+                // @ts-ignore
+                if (this[field]) this[field] = sanitizeEncrypt(this[field]);
+            });
+        });
+
+        // @ts-ignore
+        schema.post('save', function () {
+            fields.forEach(field => {
+                // @ts-ignore
+                if (this && this[field]) this[field] = sanitizeDecrypt(this[field]);
+            });
+        });
+
+        // @ts-ignore
+        schema.post('findById', decryptFields(fields));
+        schema.post('findOne', decryptFields(fields));
+        schema.post(['find'], function (result) {
+            result.map(decryptFields(fields));
+        });
+
+        return schema;
+    };
+
+    private sanitizeDecrypt = (value: any): any => {
         switch (this.typeOf(value)) {
             case 'array': {
-                return value.map(this.decryptModel);
+                return value.map(this.sanitizeDecrypt);
             }
             case 'object': {
                 const keys = Object.keys(value);
-                return Object.fromEntries(keys.map(k => [k, this.decryptModel(value[k])]));
+                return Object.fromEntries(keys.map(k => [k, this.sanitizeDecrypt(value[k])]));
             }
 
             default: {
@@ -26,14 +64,14 @@ export class EncryptService {
         }
     };
 
-    encryptModel = (value: any): any => {
+    private sanitizeEncrypt = (value: any): any => {
         switch (this.typeOf(value)) {
             case 'array': {
-                return value.map(this.encryptModel);
+                return value.map(this.sanitizeEncrypt);
             }
             case 'object': {
                 const keys = Object.keys(value);
-                return Object.fromEntries(keys.map(k => [k, this.encryptModel(value[k])]));
+                return Object.fromEntries(keys.map(k => [k, this.sanitizeEncrypt(value[k])]));
             }
 
             default: {
@@ -42,10 +80,10 @@ export class EncryptService {
         }
     };
 
-    decryptFields = (ENCRYPT_FIELDS: string[]) => {
+    private decryptFields = (ENCRYPT_FIELDS: string[]) => {
         return (data: { [x: string]: any }) => {
             ENCRYPT_FIELDS.forEach(field => {
-                if (data && data[field]) data[field] = this.decryptModel(data[field]);
+                if (data && data[field]) data[field] = this.sanitizeDecrypt(data[field]);
             });
         };
     };

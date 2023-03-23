@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { socketColor } from '@helper/chalk.helper';
 import { IGatewayModuleOption } from '@module/gateway/gateway.interface';
 import { UseFilters } from '@nestjs/common';
-import { AllWsExceptionsFilter } from '@custom/exceptionFilter';
+import { AllWsExceptionsFilter } from '@src/custom/exceptionFilter.custom';
 
 @UseFilters(AllWsExceptionsFilter)
 @WebSocketGateway()
@@ -17,7 +17,7 @@ export class InitGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     handleDisconnect(client: Socket) {
-        socketColor(`Socket disconnected id = ${client.id} --- userId =${client.data.user?._id}`);
+        socketColor(`Socket disconnected id = ${client.id} --- userId = ${client.data.user?._id}`);
     }
 }
 

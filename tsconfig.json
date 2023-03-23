@@ -28,7 +28,7 @@
         "src/constant/*"
       ],
       "@controller/*": [
-        "src/controller/*"
+        "src/api/controller/*"
       ],
       "@helper/*": [
         "src/helper/*"
@@ -40,7 +40,7 @@
         "src/repository/*"
       ],
       "@middleware/*": [
-        "src/middleware/*"
+        "src/api/middleware/*"
       ],
       "@module/*": [
         "src/module/*"
@@ -52,6 +52,6 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.key"
+    "keys"
   ]
 }

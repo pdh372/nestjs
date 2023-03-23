@@ -37,13 +37,14 @@ export class AllHttpExceptionsFilter implements ExceptionFilter {
         const { res, req } = this.getContext(host);
 
         const httpCode = exception.getStatus();
-
         const errorLog = await this.showLogInternalDetail({ httpCode, req, error, host });
         const errorValidate = this.showLogValidateDetail({ exception, error });
 
+        const resException = exception.getResponse() as any;
         const responsePayload = {
             statusCode: httpCode,
-            errorMessage: exception.message,
+            body: resException?.info ? resException : undefined,
+            error: exception.message,
             errorLog,
             errorValidate,
         };

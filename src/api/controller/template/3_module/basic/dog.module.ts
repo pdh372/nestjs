@@ -78,14 +78,14 @@ ${path}
             promises = await Promise.all(promises);
             return promises;
         } catch (error) {
-            console.log(error.message);
+            console.info(error.message);
             return [];
         }
     }
 }
 
 const sleep = () => {
-    console.log('sleeping...');
+    console.info('sleeping...');
     return new Promise(resolve => setTimeout(resolve, 2000));
 };
 

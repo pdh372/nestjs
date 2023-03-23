@@ -1,7 +1,7 @@
 import { ICreateRedisInstance } from '@module/redis/redis.interface';
 import { appColor, errColor } from '@helper/chalk.helper';
 import * as redis from 'redis';
-import { Injectable, InjectionToken } from '@nestjs/common';
+import { InjectionToken } from '@nestjs/common';
 
 const _connection = new Map<InjectionToken, redis.RedisClientType>();
 

@@ -15,7 +15,6 @@ export class MorganInterceptor implements NestInterceptor {
         const res = context.switchToHttp().getResponse<Response>();
         const now = Date.now();
 
-        console.info('\n');
         if (this.configService.get('debug_global_request_data')) {
             if (!_.isEmpty(req.body)) logColor('[BODY] = ' + JSON.stringify(req.body));
             if (!_.isEmpty(req.query)) logColor('[QUERY] = ' + JSON.stringify(req.query));
@@ -30,7 +29,7 @@ export class MorganInterceptor implements NestInterceptor {
                 errColor(`[${req.method}] ${req.url} :: ${Date.now() - now}ms\n`);
                 return throwError(() => err);
             }),
-            map(data => ({ statusCode: res.statusCode, data })),
+            map(body => ({ statusCode: res.statusCode, body })),
         );
     }
 }

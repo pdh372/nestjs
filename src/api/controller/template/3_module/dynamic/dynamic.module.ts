@@ -5,11 +5,11 @@ import * as INJECT_TOKEN from '@constant/injectionToken.const';
 @Injectable()
 export class MyDynamicService {
     constructor(@Optional() @Inject(INJECT_TOKEN.IT_DYNAMIC_MODULE_INPUT) private data: any) {
-        console.log('create dir and folder', data.dirname, data.filename);
+        console.info('create dir and folder', data.dirname, data.filename);
     }
 
     writeData(data: any) {
-        console.log(`wrote in ${this.data.dirname}/${this.data.filename} data =`, data);
+        console.info(`wrote in ${this.data.dirname}/${this.data.filename} data =`, data);
     }
 }
 
