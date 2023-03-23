@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { socketColor } from '@helper/chalk.helper';
 import { IGatewayModuleOption } from '@module/gateway/gateway.interface';
 import { UseFilters } from '@nestjs/common';
-import { AllWsExceptionsFilter } from '@src/custom/exceptionFilter.custom';
+import { AllWsExceptionsFilter } from '@src/custom/exception-filter.custom';
 
 @UseFilters(AllWsExceptionsFilter)
 @WebSocketGateway()

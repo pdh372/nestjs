@@ -27,8 +27,8 @@
       "@constant/*": [
         "src/constant/*"
       ],
-      "@controller/*": [
-        "src/api/controller/*"
+      "@router/*": [
+        "src/api/router/*"
       ],
       "@helper/*": [
         "src/helper/*"
@@ -47,10 +47,10 @@
       ],
       "@socket/*": [
         "src/socket/*"
+      ],
+      "@util/*": [
+        "src/util/*"
       ]
     }
   },
-  "include": [
-    "src/**/*.ts",
-  ]
 }

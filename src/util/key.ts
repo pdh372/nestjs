@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 function generateRandomString(length: number) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}[]|\\:;"<>,.?/~`';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$%^&*()_+{}[]|\\:;"<>,.?/~`';
     const randomBytes = crypto.randomBytes(length);
     let result = '';
     for (let i = 0; i < length; i++) {
@@ -12,7 +12,7 @@ function generateRandomString(length: number) {
 
 (async () => {
     try {
-        const bit = +process.argv[2] || 2048;
+        const bit = 2048;
 
         if (typeof bit !== 'number') {
             return console.error('ERROR: process.argv[3] is not number');
@@ -35,8 +35,7 @@ function generateRandomString(length: number) {
         console.log('\n\n');
 
         console.log('---------------------SECRET KEY------------------------------');
-        // 512 bit / 8 = 64 char
-        console.log(generateRandomString(512 / 8));
+        console.log(generateRandomString(bit / 16));
         console.log('---------------------SECRET KEY------------------------------');
     } catch (error) {
         console.error(error.message);

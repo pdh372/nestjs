@@ -11,6 +11,9 @@ export class User extends Document {
     @Prop({ required: true })
     mobileNumber: string;
 
+    @Prop({ required: true })
+    password: string;
+
     createdAt: Date;
     updatedAt: Date;
 }

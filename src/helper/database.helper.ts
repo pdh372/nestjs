@@ -1,5 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConnectMongodbModule } from './connectMongodb.helper';
+import { ConnectMongodbModule } from './connect-mongodb.helper';
 
 @Module({})
 export class DataBaseModule {

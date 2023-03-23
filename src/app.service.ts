@@ -12,7 +12,7 @@ import { appColor } from '@helper/chalk.helper';
 import { RedisIoAdapter } from '@module/gateway/gateway.adapter';
 import { RedisClientType } from 'redis';
 import { InjectRedisInstance } from '@module/redis/redis.helper';
-import * as INJECT_TOKEN from '@constant/injectionToken.const';
+import * as INJECT_TOKEN from '@src/constant/injection-token.const';
 
 @Injectable()
 export class AppService {

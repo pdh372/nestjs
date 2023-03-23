@@ -18,7 +18,7 @@ import { IAppReq } from '@interface/express.interface';
 import { IWriteHttpErrorLog } from '@interface/custom.interface';
 import { Socket } from 'socket.io';
 import { IWriteWsErrorLog } from '@interface/custom.interface';
-import { EVENT_PUB } from '@constant/eventSocket.const';
+import { EVENT_PUB } from '@src/constant/event-socket.const';
 import { BadRequestException } from '@nestjs/common';
 import { ILogInternal, ILogValidate } from 'src/interface/custom.interface';
 
@@ -44,7 +44,6 @@ export class AllHttpExceptionsFilter implements ExceptionFilter {
         const responsePayload = {
             statusCode: httpCode,
             body: resException?.info ? resException : undefined,
-            error: exception.message,
             errorLog,
             errorValidate,
         };

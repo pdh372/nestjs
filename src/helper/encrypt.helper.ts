@@ -3,9 +3,9 @@ import { Inject, Injectable, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
-import * as INJECT_TOKEN from '@constant/injectionToken.const';
+import * as INJECT_TOKEN from '@src/constant/injection-token.const';
 import { IConfigService } from '@interface/config.interface';
-import { IInjectTokenEncrypt } from '@interface/useProvider.interface';
+import { IInjectTokenEncrypt } from '@src/interface/use-provider.interface';
 import { Schema } from 'mongoose';
 
 @Injectable()

@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { IConfigService } from '@interface/config.interface';
 import { ENV } from '@constant/config.const';
-import * as IT from 'src/constant/injectionToken.const';
-import { TRoleSign } from 'src/api/controller/auth/auth.interface';
+import * as IT from '@src/constant/injection-token.const';
+import { TRoleSign } from '@src/api/router/auth/auth.interface';
 
-@Module({
-    controllers: [AuthService],
-    providers: [],
-})
+@Global()
+@Module({})
 export class AuthModule {
     static register(): DynamicModule {
-        console.log(process.env.JWT_PRIVATE_KEY || ''.replace(/\\n/gm, '\n'));
         const roles: TRoleSign[] = [
             {
                 provide: IT.JWT.USER.ACCESS_TOKEN,
@@ -23,7 +20,7 @@ export class AuthModule {
             },
             {
                 provide: IT.JWT.USER.REFRESH_TOKEN,
-                signOptions: { expiresIn: '7m', algorithm: 'RS256' },
+                signOptions: { expiresIn: '1m', algorithm: 'RS256' },
                 publicKey: 'refresh_token.user.public_key',
                 privateKey: 'refresh_token.user.private_key',
             },
@@ -33,7 +30,6 @@ export class AuthModule {
             return {
                 provide: role.provide,
                 useFactory: (configService: IConfigService) => {
-                    // console.log(configService.get('refresh_token').user.private_key);
                     return new JwtService({
                         // @ts-ignore
                         signOptions: role.signOptions,
@@ -52,8 +48,8 @@ export class AuthModule {
 
         return {
             module: AuthModule,
-            providers,
-            exports: [...roles.map(role => role.provide)],
+            providers: [AuthService, ...providers],
+            exports: [AuthService],
         };
     }
 }

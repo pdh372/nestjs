@@ -1,12 +1,10 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { Types } from 'mongoose';
-import { AUTH } from 'src/constant/error.const';
-import * as IT from 'src/constant/injectionToken.const';
-import { IUserVerified } from 'src/api/controller/auth/auth.interface';
+import * as IT from '@src/constant/injection-token.const';
+import { IUserVerified } from '@src/api/router/auth/auth.interface';
 
-@Controller('auth')
 export class AuthService {
     constructor(
         private readonly models: MongodbService,
@@ -14,16 +12,14 @@ export class AuthService {
         @Inject(IT.JWT.USER.REFRESH_TOKEN) private readonly userRefreshToken: JwtService,
     ) {}
 
-    @Post('sign-user')
-    signUserToken(@Body() params: { _id: string | Types.ObjectId }) {
+    signUserToken(params: { _id: string | Types.ObjectId }) {
         return {
             accessToken: this.userAccessToken.sign({ _id: params._id }),
             refreshToken: this.userRefreshToken.sign({ _id: params._id }),
         };
     }
 
-    @Post('verify-rt')
-    verifyUserRefreshToken(@Body() params: { refreshToken: string }) {
+    verifyUserRefreshToken(params: { refreshToken: string }) {
         try {
             const data = this.userRefreshToken.verify<IUserVerified>(params.refreshToken);
             return data;
@@ -32,8 +28,7 @@ export class AuthService {
         }
     }
 
-    @Post('verify-at')
-    verifyUserAccessToken(@Body() params: { accessToken: string }) {
+    verifyUserAccessToken(params: { accessToken: string }) {
         try {
             const data = this.userAccessToken.verify<IUserVerified>(params.accessToken);
             return data;
@@ -42,8 +37,7 @@ export class AuthService {
         }
     }
 
-    @Post('sign-at')
-    signUserAccessToken(@Body() params: { _id: string | Types.ObjectId }) {
+    signUserAccessToken(params: { _id: string | Types.ObjectId }) {
         return {
             accessToken: this.userAccessToken.sign({ _id: params._id }),
         };
