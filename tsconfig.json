@@ -17,40 +17,62 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/interface"
+    ],
     "paths": {
       "@src/*": [
         "./src/*"
       ],
-      "@custom/*": [
-        "src/custom/*"
-      ],
-      "@constant/*": [
-        "src/constant/*"
+      // api
+      "@middleware/*": [
+        "src/api/middleware/*"
       ],
       "@router/*": [
         "src/api/router/*"
       ],
+      "@serialization/*": [
+        "src/api/serialization/*"
+      ],
+      "@service/*": [
+        "src/api/service/*"
+      ],
+      // const
+      "@constant/*": [
+        "src/constant/*"
+      ],
+      // custom
+      "@custom/*": [
+        "src/custom/*"
+      ],
+      "@guard/*": [
+        "src/custom/guard/*"
+      ],
+      // helper
       "@helper/*": [
         "src/helper/*"
       ],
+      // interface
       "@interface/*": [
         "src/interface/*"
       ],
-      "@repository/*": [
-        "src/repository/*"
-      ],
-      "@middleware/*": [
-        "src/api/middleware/*"
-      ],
+      // module
       "@module/*": [
         "src/module/*"
       ],
+      // repository
+      "@repository/*": [
+        "src/repository/*"
+      ],
+      // socket
       "@socket/*": [
         "src/socket/*"
       ],
+      //util
       "@util/*": [
         "src/util/*"
-      ]
+      ],
     }
   },
 }

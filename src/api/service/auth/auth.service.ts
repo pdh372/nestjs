@@ -1,21 +1,20 @@
 import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { Types } from 'mongoose';
 import * as IT from '@src/constant/injection-token.const';
-import { IUserVerified } from '@src/api/router/auth/auth.interface';
+import { IUserVerified } from '@src/api/service/auth/auth.interface';
 
 export class AuthService {
     constructor(
-        private readonly models: MongodbService,
         @Inject(IT.JWT.USER.ACCESS_TOKEN) private readonly userAccessToken: JwtService,
         @Inject(IT.JWT.USER.REFRESH_TOKEN) private readonly userRefreshToken: JwtService,
     ) {}
 
     signUserToken(params: { _id: string | Types.ObjectId }) {
+        const data: IUserVerified = { _id: params._id.toString() };
         return {
-            accessToken: this.userAccessToken.sign({ _id: params._id }),
-            refreshToken: this.userRefreshToken.sign({ _id: params._id }),
+            accessToken: this.userAccessToken.sign(data),
+            refreshToken: this.userRefreshToken.sign(data),
         };
     }
 
@@ -38,8 +37,9 @@ export class AuthService {
     }
 
     signUserAccessToken(params: { _id: string | Types.ObjectId }) {
+        const data: IUserVerified = { _id: params._id.toString() };
         return {
-            accessToken: this.userAccessToken.sign({ _id: params._id }),
+            accessToken: this.userAccessToken.sign(data),
         };
     }
 }

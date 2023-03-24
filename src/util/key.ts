@@ -35,7 +35,7 @@ function generateRandomString(length: number) {
         console.log('\n\n');
 
         console.log('---------------------SECRET KEY------------------------------');
-        console.log(generateRandomString(bit / 16));
+        console.log(generateRandomString(64));
         console.log('---------------------SECRET KEY------------------------------');
     } catch (error) {
         console.error(error.message);

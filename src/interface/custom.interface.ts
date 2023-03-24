@@ -1,4 +1,3 @@
-import { IAppReq } from '@interface/express.interface';
 import { Socket } from 'socket.io';
 import { ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
 

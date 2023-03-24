@@ -65,7 +65,7 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
                     whitelist: true,
                     transform: true,
                     forbidNonWhitelisted: true,
-                    validateCustomDecorators: true,
+                    validateCustomDecorators: false, // If true maybe bug when set return req.user
                 });
             },
         },

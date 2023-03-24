@@ -3,10 +3,8 @@ import { Response } from 'express';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { logColor, warnColor } from '@helper/chalk.helper';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from '@interface/config.interface';
 import * as _ from 'lodash';
 import { RedisWriter } from '@module/redis/redis.service';
-import { IAppReq } from '@interface/express.interface';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {
@@ -28,13 +26,9 @@ export class MorganInterceptor implements NestInterceptor {
 
         return next.handle().pipe(
             tap(() => {
-                req.keys && this.redisWriter.client.del(req.keys);
-
                 logColor(`[${req.method}] ${req.url} :: code: ${res.statusCode} - ${Date.now() - now}ms`);
             }),
             catchError(err => {
-                req.keys && this.redisWriter.client.del(req.keys);
-
                 warnColor(`[${req.method}] ${req.url} :: ${Date.now() - now}ms`);
                 return throwError(() => err);
             }),

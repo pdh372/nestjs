@@ -6,6 +6,9 @@ export const ERROR_AUTH = {
 export const ERROR_USER = {
     ACCOUNT_EXISTS: 'account_exists',
     ACCOUNT_NOT_FOUND: 'account_not_found',
+    PASSWORD_NOT_MATCH: 'password_not_match',
+    LOGIN_UNSUCCESSFULLY: 'login_unsuccessful',
+    SIGNUP_UNSUCCESSFULLY: 'signup_unsuccessful',
 };
 
 export const ERROR_COMMON = {

@@ -10,11 +10,9 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from '@interface/config.interface';
 import { ENV } from '@constant/config.const';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { Response } from 'express';
-import { IAppReq } from '@interface/express.interface';
 import { IWriteHttpErrorLog } from '@interface/custom.interface';
 import { Socket } from 'socket.io';
 import { IWriteWsErrorLog } from '@interface/custom.interface';

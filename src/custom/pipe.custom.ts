@@ -5,7 +5,6 @@ import { validate } from 'class-validator';
 import { appColor } from '@helper/chalk.helper';
 import { logColor } from '@helper/chalk.helper';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from '@interface/config.interface';
 interface IMyParseIntPipe {
     min?: number;
     max?: number;

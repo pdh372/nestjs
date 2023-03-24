@@ -3,10 +3,9 @@ import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from '@interface/config.interface';
 import { ENV } from '@constant/config.const';
 import * as IT from '@src/constant/injection-token.const';
-import { TRoleSign } from '@src/api/router/auth/auth.interface';
+import { TRoleSign } from '@src/api/service/auth/auth.interface';
 
 @Global()
 @Module({})

@@ -8,14 +8,13 @@ import {
     CallHandler,
     InternalServerErrorException,
 } from '@nestjs/common';
-import { IAppReq } from '@interface/express.interface';
 import { ERROR_COMMON } from '@constant/error.const';
-import { IConfigService } from '@interface/config.interface';
 import { RedisWriter } from 'src/module/redis/redis.service';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ILockActionMetadata } from './lock-action.interface';
 import { LOCK_ACTION_KEY } from './lock-action.const';
+import { tap } from 'rxjs';
 
 @Injectable()
 export class LockActionInterceptor implements NestInterceptor {
@@ -48,6 +47,11 @@ export class LockActionInterceptor implements NestInterceptor {
 
         await this.redisWriter.client.expire(key, lockTime || 30);
 
-        return next.handle();
+        return next.handle().pipe(
+            tap(() => {
+                // delete key redis after handler response
+                req.keys && this.redisWriter.client.del(req.keys);
+            }),
+        );
     }
 }

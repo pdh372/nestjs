@@ -7,11 +7,10 @@ import {
     CallHandler,
     InternalServerErrorException,
 } from '@nestjs/common';
-import { IAppReq } from '@interface/express.interface';
 import { Reflector } from '@nestjs/core';
 import { ITempLockMetadata } from './temp-lock.interface';
 import { TEMP_LOCK_KEY } from './temp-lock.const';
-import { TEMP_LOCKED } from 'src/constant/error.const';
+import { TEMP_LOCKED } from '@constant/error.const';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 
@@ -33,6 +32,7 @@ export class TempLockInterceptor implements NestInterceptor {
                 {
                     info: TEMP_LOCKED,
                     lockedUntil: req.session[req.lockedUntilKey],
+                    failed: maxAttempt,
                 },
                 HttpStatus.TOO_MANY_REQUESTS,
             );
@@ -46,6 +46,7 @@ export class TempLockInterceptor implements NestInterceptor {
                 {
                     info: TEMP_LOCKED,
                     lockedUntil: req.session[req.lockedUntilKey],
+                    failed: req.session[req.attemptsKey] || maxAttempt,
                 },
                 HttpStatus.TOO_MANY_REQUESTS,
             );
@@ -54,7 +55,6 @@ export class TempLockInterceptor implements NestInterceptor {
         req.session[req.lockedUntilKey] = undefined;
         req.maxAttempt = maxAttempt;
         req.lockTime = lockTime;
-        req.session[lockType] = (req.session[lockType] || 0) + 1;
 
         return next.handle();
     }

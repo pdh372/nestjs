@@ -2,7 +2,6 @@ import { INestApplication, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as useragent from 'express-useragent';
 import * as hpp from 'hpp';
-import { IConfigService } from '@interface/config.interface';
 import helmet from 'helmet';
 import * as compression from 'compression';
 import * as session from 'express-session';

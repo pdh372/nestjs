@@ -38,5 +38,3 @@ export interface IAppConfig {
         user?: string;
     };
 }
-
-export type IConfigService = ConfigService<IAppConfig>;
