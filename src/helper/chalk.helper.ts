@@ -15,6 +15,6 @@ export const socketColor = (...text: any[]) => {
     logger.log(chalk.bgHex('C15DA1').blue(text));
 };
 
-export const errColor = (...text: any[]) => {
-    logger.error(chalk.bgHex('EF1A11').white(text));
+export const warnColor = (...text: any[]) => {
+    logger.warn(chalk.bgHex('EF1A11').white(text));
 };

@@ -1,7 +1,9 @@
 import { ICreateRedisInstance } from '@module/redis/redis.interface';
-import { appColor, errColor } from '@helper/chalk.helper';
+import { appColor, warnColor } from '@helper/chalk.helper';
 import * as redis from 'redis';
-import { InjectionToken } from '@nestjs/common';
+import { InjectionToken, Inject } from '@nestjs/common';
+import { RedisClientType } from 'redis';
+import * as IT from '@constant/injection-token.const';
 
 const _connection = new Map<InjectionToken, redis.RedisClientType>();
 
@@ -20,6 +22,22 @@ export const newRedisClient = async (config: ICreateRedisInstance) => {
         appColor(`🍺 Connected redis token = "${config.it.toString()}"`);
         return client;
     } catch (error) {
-        errColor('newRedisClient: ', error.message);
+        warnColor('newRedisClient: ', error.message);
     }
 };
+
+export class RedisWriter {
+    constructor(@Inject(IT.REDIS.WRITER) private writer: RedisClientType) {}
+
+    get client() {
+        return this.writer;
+    }
+}
+
+export class RedisAdapter {
+    constructor(@Inject(IT.REDIS.ADAPTER) private adapter: RedisClientType) {}
+
+    get client() {
+        return this.adapter;
+    }
+}

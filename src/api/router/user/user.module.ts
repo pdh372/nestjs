@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PublicController } from '@router/user/controller/public.controller';
+import { UserPublicController } from '@router/user/controller/user-public.controller';
 
 @Module({
-    controllers: [PublicController],
+    controllers: [UserPublicController],
+    providers: [],
 })
 export class UserModule {}

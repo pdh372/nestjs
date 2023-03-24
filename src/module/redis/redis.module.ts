@@ -1,7 +1,6 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { hashToken } from '@module/redis/redis.helper';
 import { ICreateRedisInstance, IRedisModuleOption } from './redis.interface';
-import { newRedisClient } from './redis.service';
+import { newRedisClient, RedisWriter, RedisAdapter } from './redis.service';
 import { ConfigService } from '@nestjs/config';
 import { IConfigService } from '@interface/config.interface';
 
@@ -9,8 +8,7 @@ import { IConfigService } from '@interface/config.interface';
 @Module({})
 export class RedisModule {
     static forRoot(createNewInstance: IRedisModuleOption): DynamicModule {
-        const ITs = createNewInstance.configs.map(c => hashToken(c.it));
-
+        const ITs = createNewInstance.configs.map(_ => _.it);
         return {
             module: RedisModule,
             providers: [
@@ -27,8 +25,10 @@ export class RedisModule {
                     },
                     inject: [ConfigService],
                 })),
+                RedisWriter,
+                RedisAdapter,
             ],
-            exports: [...ITs],
+            exports: [RedisWriter, RedisAdapter],
         };
     }
 }

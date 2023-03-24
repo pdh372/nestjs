@@ -5,4 +5,4 @@ import { UserModule } from './user/user.module';
 @Module({
     imports: [AuthModule.register(), UserModule],
 })
-export class ControllerModule {}
+export class RouterModule {}

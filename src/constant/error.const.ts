@@ -7,3 +7,9 @@ export const ERROR_USER = {
     ACCOUNT_EXISTS: 'account_exists',
     ACCOUNT_NOT_FOUND: 'account_not_found',
 };
+
+export const ERROR_COMMON = {
+    TMR: 'Too many request.',
+};
+
+export const TEMP_LOCKED = 'temp_locked';

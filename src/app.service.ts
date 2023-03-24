@@ -10,15 +10,13 @@ import * as connectMongoDbSession from 'connect-mongodb-session';
 import { ENV } from '@constant/config.const';
 import { appColor } from '@helper/chalk.helper';
 import { RedisIoAdapter } from '@module/gateway/gateway.adapter';
-import { RedisClientType } from 'redis';
-import { InjectRedisInstance } from '@module/redis/redis.helper';
-import * as INJECT_TOKEN from '@src/constant/injection-token.const';
+import { RedisAdapter } from '@module/redis/redis.service';
 
 @Injectable()
 export class AppService {
     constructor(
         @Inject(ConfigService) private readonly configService: IConfigService,
-        @InjectRedisInstance(INJECT_TOKEN.REDIS.ADAPTER) private readonly redis: RedisClientType,
+        private readonly redisAdapter: RedisAdapter,
     ) {}
 
     private get session() {
@@ -117,7 +115,7 @@ export class AppService {
 
     async createAdapter(app: INestApplication) {
         const redisIoAdapter = new RedisIoAdapter(app);
-        await redisIoAdapter.connectToRedis({ redis: this.redis, configService: this.configService });
+        await redisIoAdapter.connectToRedis({ redis: this.redisAdapter.client, configService: this.configService });
         return redisIoAdapter;
     }
 }

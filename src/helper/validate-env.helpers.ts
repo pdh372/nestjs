@@ -1,7 +1,7 @@
 import { IsBoolean, IsEnum, IsNumber, IsString, validateSync, IsOptional, IsNotEmpty } from 'class-validator';
 import { Transform, plainToInstance } from 'class-transformer';
 import { ENV } from '@constant/config.const';
-import { errColor, appColor } from '@helper/chalk.helper';
+import { warnColor, appColor } from '@helper/chalk.helper';
 
 const stringToBoolean = (t: any) => {
     return t.value === 'true';
@@ -101,7 +101,7 @@ export function validateEnvironment(config: Record<string, unknown>) {
     const errors = validateSync(validatedConfig, { skipMissingProperties: false });
 
     if (errors.length > 0) {
-        errColor(...errors.map(e => Object.values(e.constraints || {}).toString()));
+        warnColor(...errors.map(e => Object.values(e.constraints || {}).toString()));
         process.exit(1);
     }
 

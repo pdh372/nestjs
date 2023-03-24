@@ -1,8 +1,8 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
-import { MorganInterceptor } from '@custom/interceptor.custom';
+import { MorganInterceptor } from '@src/custom/interceptor/morgan/morgan.interceptor';
 import { MongodbModule } from '@repository/mongodb/mongodb.module';
-import { ControllerModule } from '@src/api/router/router.module';
+import { RouterModule } from '@src/api/router/router.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { DataBaseModule } from '@helper/database.helper';
@@ -32,7 +32,7 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
         MongodbModule,
 
         // Controller
-        ControllerModule,
+        RouterModule,
 
         // Socket
         GatewayModule.forRoot({
