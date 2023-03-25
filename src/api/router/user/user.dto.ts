@@ -1,5 +1,5 @@
 import { PickType } from '@nestjs/swagger';
-import { IsMobilePhone, IsStrongPassword } from 'class-validator';
+import { IsMobilePhone, IsString, IsStrongPassword } from 'class-validator';
 
 export class UserSignUpDTO {
     @IsMobilePhone('vi-VN')
@@ -10,3 +10,8 @@ export class UserSignUpDTO {
 }
 
 export class UserLoginDTO extends PickType(UserSignUpDTO, ['mobileNumber', 'password']) {}
+
+export class RefreshTokenDTO {
+    @IsString()
+    refreshToken: string;
+}

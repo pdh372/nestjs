@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Types } from 'mongoose';
 import * as IT from '@src/constant/injection-token.const';
 import { IUserVerified } from '@src/api/service/auth/auth.interface';
+import { ERROR_AUTH } from '@constant/error.const';
 
 export class AuthService {
     constructor(
@@ -20,19 +21,25 @@ export class AuthService {
 
     verifyUserRefreshToken(params: { refreshToken: string }) {
         try {
-            const data = this.userRefreshToken.verify<IUserVerified>(params.refreshToken);
-            return data;
+            return this.userRefreshToken.verify<IUserVerified>(params.refreshToken);
         } catch (error) {
-            return error.message;
+            return null;
         }
     }
 
     verifyUserAccessToken(params: { accessToken: string }) {
         try {
-            const data = this.userAccessToken.verify<IUserVerified>(params.accessToken);
-            return data;
+            return this.userAccessToken.verify<IUserVerified>(params.accessToken);
         } catch (error) {
-            return null;
+            switch (error?.message) {
+                case 'jwt expired': {
+                    throw new Error(ERROR_AUTH.TOKEN_EXPIRED);
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 export const ERROR_AUTH = {
     MOBILE_NUMBER_NOT_FOUND: 'mobile_number_not_found',
     INVALID_TOKEN: 'invalid_token',
+    TOKEN_EXPIRED: 'token_expired',
 };
 
 export const ERROR_USER = {

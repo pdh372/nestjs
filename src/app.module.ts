@@ -1,6 +1,6 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
-import { MorganInterceptor } from '@src/custom/interceptor/morgan/morgan.interceptor';
+import { MorganInterceptor } from '@src/custom/interceptor/morgan';
 import { MongodbModule } from '@repository/mongodb/mongodb.module';
 import { RouterModule } from '@src/api/router/router.module';
 import { ConfigModule } from '@nestjs/config';

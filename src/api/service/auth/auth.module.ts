@@ -4,8 +4,8 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
-import * as IT from '@src/constant/injection-token.const';
-import { TRoleSign } from '@src/api/service/auth/auth.interface';
+import * as IT from '@constant/injection-token.const';
+import { TRoleSign } from '@service/auth/auth.interface';
 
 @Global()
 @Module({})

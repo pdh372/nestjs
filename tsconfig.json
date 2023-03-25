@@ -26,6 +26,9 @@
         "./src/*"
       ],
       // api
+      "@api/*": [
+        "src/api/*"
+      ],
       "@middleware/*": [
         "src/api/middleware/*"
       ],
@@ -48,6 +51,9 @@
       ],
       "@guard/*": [
         "src/custom/guard/*"
+      ],
+      "@interceptor/*": [
+        "src/custom/interceptor/*"
       ],
       // helper
       "@helper/*": [

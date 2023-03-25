@@ -2,34 +2,29 @@ import {
     Body,
     Controller,
     Post,
-    UseInterceptors,
     Req,
     NotFoundException,
     HttpException,
     HttpStatus,
     HttpCode,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '@src/api/service/auth/auth.service';
-import { UserSignUpDTO, UserLoginDTO } from '@router/user/user.dto';
+import { UserSignUpDTO, UserLoginDTO, RefreshTokenDTO } from '@router/user/user.dto';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { ERROR_USER } from '@constant/error.const';
+import { ERROR_AUTH, ERROR_USER, TEMP_LOCKED } from '@constant/error.const';
 import { hashPassword, comparePassword } from '@util/string';
-import { LockActionMetadata } from '@custom/interceptor/lock-action/lock-action.metadata';
-import { TempLockMetadata } from '@custom/interceptor/temp-lock/temp-lock.metadata';
-import { TempLockInterceptor } from '@custom/interceptor/temp-lock/temp-lock.interceptor';
 import { userSerialization } from '@serialization/user.serialization';
 import * as moment from 'moment';
-import { TEMP_LOCKED } from '@constant/error.const';
-import { LockActionInterceptor, LA_TYPE } from '@custom/interceptor/lock-action';
-import { TL_TYPE } from '@custom/interceptor/temp-lock';
+import { LA_TYPE, LockAction } from '@custom/interceptor/lock-action';
+import { TL_TYPE, TempLock } from '@custom/interceptor/temp-lock';
 
 @Controller({ path: 'user/public' })
 export class UserPublicController {
     constructor(private authService: AuthService, private models: MongodbService) {}
 
-    @UseInterceptors(LockActionInterceptor, TempLockInterceptor)
-    @TempLockMetadata({ lockType: TL_TYPE.SIGNUP })
-    @LockActionMetadata({ lockType: LA_TYPE.SIGNUP })
+    @LockAction({ lockType: LA_TYPE.SIGNUP })
+    @TempLock({ lockType: TL_TYPE.SIGNUP })
     @Post('signup')
     async handleSignup(@Body() body: UserSignUpDTO, @Req() req: IAppReq) {
         try {
@@ -88,8 +83,7 @@ export class UserPublicController {
         }
     }
 
-    @UseInterceptors(TempLockInterceptor)
-    @TempLockMetadata({ lockType: TL_TYPE.LOGIN })
+    @TempLock({ lockType: TL_TYPE.LOGIN })
     @HttpCode(HttpStatus.OK)
     @Post('login')
     async handleLogin(@Body() body: UserLoginDTO, @Req() req: IAppReq) {
@@ -148,5 +142,24 @@ export class UserPublicController {
                 failed,
             });
         }
+    }
+
+    @TempLock({ lockType: TL_TYPE.REFRESH_TOKEN })
+    @Post('refreshToken')
+    async handleRefreshToken(@Body() body: RefreshTokenDTO, @Req() req: IAppReq) {
+        const { refreshToken } = body;
+
+        const data = this.authService.verifyUserRefreshToken({ refreshToken });
+        if (!data) {
+            throw new UnauthorizedException({ info: ERROR_AUTH.INVALID_TOKEN });
+        }
+
+        req.session[req.attemptsKey] = 0;
+        req.session[req.lockedUntilKey] = undefined;
+
+        const { accessToken } = this.authService.signUserAccessToken({ _id: data._id });
+        return {
+            accessToken,
+        };
     }
 }

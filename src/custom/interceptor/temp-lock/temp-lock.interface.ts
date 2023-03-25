@@ -4,5 +4,5 @@ export interface ITempLockMetadata {
     lockTime?: number; // in minute
 }
 
-export type TTempLockType = 'signup' | 'login';
+export type TTempLockType = 'signup' | 'login' | 'refresh_token';
 export type TTempLockTypeObj = MappedTypeConst<TTempLockType>;

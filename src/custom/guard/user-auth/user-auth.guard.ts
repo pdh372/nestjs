@@ -1,9 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { AuthService } from '@src/api/service/auth/auth.service';
 import { Reflector } from '@nestjs/core';
 import { USER_JWT_GUARD_KEY } from './user-auth.constant';
 import { IUserAuthDecorator } from './user-auth.interface';
+import { ERROR_AUTH } from 'src/constant/error.const';
 
 @Injectable()
 export class UserJwtGuard implements CanActivate {
@@ -24,8 +25,11 @@ export class UserJwtGuard implements CanActivate {
 
             return true;
         } catch (error) {
-            console.log(error.message);
-            return false;
+            if (error?.message === ERROR_AUTH.TOKEN_EXPIRED) {
+                throw new UnauthorizedException({ info: ERROR_AUTH.TOKEN_EXPIRED });
+            }
+
+            throw new UnauthorizedException({ info: ERROR_AUTH.INVALID_TOKEN });
         }
     }
 }

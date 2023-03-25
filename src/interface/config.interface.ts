@@ -1,5 +1,3 @@
-import { ConfigService } from '@nestjs/config';
-
 export type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
 
 export interface IAppConfig {
