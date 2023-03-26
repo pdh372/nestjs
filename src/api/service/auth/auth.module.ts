@@ -6,6 +6,8 @@ import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
 import * as IT from '@constant/injection-token.const';
 import { TRoleSign } from '@service/auth/auth.interface';
+import { MyPassportStrategyModule } from '@service/strategy/strategy.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Global()
 @Module({})
@@ -14,7 +16,7 @@ export class AuthModule {
         const roles: TRoleSign[] = [
             {
                 provide: IT.JWT.USER.ACCESS_TOKEN,
-                signOptions: { expiresIn: '1h', algorithm: 'HS256' },
+                signOptions: { expiresIn: '10 seconds', algorithm: 'HS256' },
                 secret: 'access_token.user',
             },
             {
@@ -47,6 +49,7 @@ export class AuthModule {
 
         return {
             module: AuthModule,
+            imports: [PassportModule, MyPassportStrategyModule],
             providers: [AuthService, ...providers],
             exports: [AuthService],
         };

@@ -21,7 +21,7 @@ import { BadRequestException } from '@nestjs/common';
 import { ILogInternal, ILogValidate } from 'src/interface/custom.interface';
 
 @Catch()
-export class AllHttpExceptionsFilter implements ExceptionFilter {
+export class AllHttpException implements ExceptionFilter {
     constructor(
         private readonly httpAdapterHost: HttpAdapterHost,
         @Inject(ConfigService) private readonly configService: IConfigService,

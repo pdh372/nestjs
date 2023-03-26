@@ -14,7 +14,7 @@ import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ILockActionMetadata } from './lock-action.interface';
 import { LOCK_ACTION_KEY } from './lock-action.const';
-import { tap } from 'rxjs';
+import { tap, catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class LockActionInterceptor implements NestInterceptor {
@@ -51,6 +51,10 @@ export class LockActionInterceptor implements NestInterceptor {
             tap(() => {
                 // delete key redis after handler response
                 req.keys && this.redisWriter.client.del(req.keys);
+            }),
+            catchError(err => {
+                req.keys && this.redisWriter.client.del(req.keys);
+                return throwError(() => err);
             }),
         );
     }

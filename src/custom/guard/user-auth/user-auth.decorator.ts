@@ -1,6 +1,6 @@
 import { ExecutionContext, SetMetadata, UseGuards, applyDecorators, createParamDecorator } from '@nestjs/common';
-import { UserJwtGuard } from './user-auth.guard';
-import { USER_JWT_GUARD_KEY } from './user-auth.constant';
+import { UserATGuard } from './user-auth.guard';
+import { USER_AUTH_KEY } from './user-auth.constant';
 import { IUserAuthDecorator } from './user-auth.interface';
 
 export const UserDecorator = createParamDecorator((_: unknown, context: ExecutionContext) => {
@@ -10,5 +10,5 @@ export const UserDecorator = createParamDecorator((_: unknown, context: Executio
 
 export function UserAuth(params?: IUserAuthDecorator) {
     if (!params) params = { selected: '' };
-    return applyDecorators(SetMetadata(USER_JWT_GUARD_KEY, params), UseGuards(UserJwtGuard));
+    return applyDecorators(SetMetadata(USER_AUTH_KEY, params), UseGuards(UserATGuard));
 }

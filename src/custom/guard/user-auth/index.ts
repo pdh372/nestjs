@@ -1,1 +1,1 @@
-export { UserAuth as UserAuthGuard, UserDecorator } from './user-auth.decorator';
+export { UserAuth, UserDecorator } from './user-auth.decorator';

@@ -4,11 +4,15 @@ import { Types } from 'mongoose';
 import * as IT from '@src/constant/injection-token.const';
 import { IUserVerified } from '@src/api/service/auth/auth.interface';
 import { ERROR_AUTH } from '@constant/error.const';
+import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { comparePassword } from '@util/string';
+import { User } from '@repository/mongodb/model/user.model';
 
 export class AuthService {
     constructor(
         @Inject(IT.JWT.USER.ACCESS_TOKEN) private readonly userAccessToken: JwtService,
         @Inject(IT.JWT.USER.REFRESH_TOKEN) private readonly userRefreshToken: JwtService,
+        private readonly models: MongodbService,
     ) {}
 
     signUserToken(params: { _id: string | Types.ObjectId }) {
@@ -48,5 +52,15 @@ export class AuthService {
         return {
             accessToken: this.userAccessToken.sign(data),
         };
+    }
+
+    async validateUser(mobileNumber: string, pass: string): Promise<User | null> {
+        const user = await this.models.User.findOne({ mobileNumber });
+
+        if (user && (await comparePassword(pass, user.password))) {
+            return user;
+        }
+
+        return null;
     }
 }

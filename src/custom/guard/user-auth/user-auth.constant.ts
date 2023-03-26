@@ -1,1 +1,1 @@
-export const USER_JWT_GUARD_KEY = Symbol('user_jwt_guard_key');
+export const USER_AUTH_KEY = Symbol('user_auth_key');

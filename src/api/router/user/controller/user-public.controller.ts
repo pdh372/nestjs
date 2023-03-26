@@ -3,21 +3,24 @@ import {
     Controller,
     Post,
     Req,
-    NotFoundException,
     HttpException,
     HttpStatus,
     HttpCode,
     UnauthorizedException,
+    UseGuards,
+    UseFilters,
 } from '@nestjs/common';
 import { AuthService } from '@src/api/service/auth/auth.service';
 import { UserSignUpDTO, UserLoginDTO, RefreshTokenDTO } from '@router/user/user.dto';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { ERROR_AUTH, ERROR_USER, TEMP_LOCKED } from '@constant/error.const';
+import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { hashPassword, comparePassword } from '@util/string';
 import { userSerialization } from '@serialization/user.serialization';
 import * as moment from 'moment';
 import { LA_TYPE, LockAction } from '@custom/interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@custom/interceptor/temp-lock';
+import { AuthGuard } from '@nestjs/passport';
+import { PassportException } from '@src/custom/exception/passport.exception';
 
 @Controller({ path: 'user/public' })
 export class UserPublicController {
@@ -26,7 +29,7 @@ export class UserPublicController {
     @LockAction({ lockType: LA_TYPE.SIGNUP })
     @TempLock({ lockType: TL_TYPE.SIGNUP })
     @Post('signup')
-    async handleSignup(@Body() body: UserSignUpDTO, @Req() req: IAppReq) {
+    async signupLocal(@Body() body: UserSignUpDTO, @Req() req: IAppReq) {
         try {
             const { mobileNumber, password } = body;
 
@@ -67,7 +70,7 @@ export class UserPublicController {
             if (lockedUntil) {
                 throw new HttpException(
                     {
-                        info: TEMP_LOCKED,
+                        info: ERROR_AUTH.TEMP_LOCKED,
                         lockedUntil: req.session[req.lockedUntilKey],
                         failed: req.maxAttempt,
                     },
@@ -75,8 +78,8 @@ export class UserPublicController {
                 );
             }
 
-            throw new NotFoundException({
-                info: ERROR_USER.SIGNUP_UNSUCCESSFULLY,
+            throw new UnauthorizedException({
+                info: ERROR_AUTH.SIGNUP_UNSUCCESSFULLY,
                 lockedUntil,
                 failed,
             });
@@ -86,7 +89,7 @@ export class UserPublicController {
     @TempLock({ lockType: TL_TYPE.LOGIN })
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    async handleLogin(@Body() body: UserLoginDTO, @Req() req: IAppReq) {
+    async loginLocal(@Body() body: UserLoginDTO, @Req() req: IAppReq) {
         try {
             const { mobileNumber, password } = body;
 
@@ -108,11 +111,13 @@ export class UserPublicController {
         } catch (error) {
             const failed = req.session[req.attemptsKey];
             let lockedUntil = req.session[req.lockedUntilKey];
+            let info = ERROR_AUTH.LOGIN_UNSUCCESSFULLY;
 
             switch (error.message) {
                 case ERROR_USER.PASSWORD_NOT_MATCH:
                 case ERROR_USER.ACCOUNT_NOT_FOUND: {
                     if (failed >= req.maxAttempt) {
+                        info = ERROR_AUTH.TEMP_LOCKED;
                         req.session[req.attemptsKey] = 0;
                         lockedUntil = moment().add(req.lockTime, 'minutes').toDate();
                         req.session[req.lockedUntilKey] = lockedUntil;
@@ -128,7 +133,7 @@ export class UserPublicController {
             if (lockedUntil) {
                 throw new HttpException(
                     {
-                        info: TEMP_LOCKED,
+                        info,
                         lockedUntil: req.session[req.lockedUntilKey],
                         failed: req.maxAttempt,
                     },
@@ -136,8 +141,8 @@ export class UserPublicController {
                 );
             }
 
-            throw new NotFoundException({
-                info: ERROR_USER.LOGIN_UNSUCCESSFULLY,
+            throw new UnauthorizedException({
+                info,
                 lockedUntil,
                 failed,
             });
@@ -161,5 +166,13 @@ export class UserPublicController {
         return {
             accessToken,
         };
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard('local'))
+    @UseFilters(PassportException)
+    @Post('test')
+    async test(@Req() req: IAppReq) {
+        return req.user;
     }
 }

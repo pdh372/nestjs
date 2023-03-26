@@ -12,7 +12,7 @@ import { GatewayModule } from '@module/gateway/gateway.module';
 import { SOCKET_PROVIDERS } from '@socket/index.socket';
 import { RedisModule } from '@module/redis/redis.module';
 import * as INJECT_TOKEN from '@src/constant/injection-token.const';
-import { AllHttpExceptionsFilter } from '@src/custom/exception-filter.custom';
+import { AllHttpException } from '@src/custom/exception/global.exception';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronJobService } from '@module/cronJob/cronJob.service';
 @Module({
@@ -71,7 +71,7 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
         },
         {
             provide: APP_FILTER,
-            useClass: AllHttpExceptionsFilter,
+            useClass: AllHttpException,
         },
     ],
 })

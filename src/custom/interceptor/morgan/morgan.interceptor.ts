@@ -4,14 +4,10 @@ import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { logColor, warnColor } from '@helper/chalk.helper';
 import { ConfigService } from '@nestjs/config';
 import * as _ from 'lodash';
-import { RedisWriter } from '@module/redis/redis.service';
 
 @Injectable()
 export class MorganInterceptor implements NestInterceptor {
-    constructor(
-        @Inject(ConfigService) private readonly configService: IConfigService,
-        private redisWriter: RedisWriter,
-    ) {}
+    constructor(@Inject(ConfigService) private readonly configService: IConfigService) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const req = context.switchToHttp().getRequest<IAppReq>();
