@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Types } from 'mongoose';
 import * as IT from '@src/constant/injection-token.const';
-import { IUserVerified } from '@src/api/service/auth/auth.interface';
+import { IUserVerified } from '@src/service/auth/auth.interface';
 import { ERROR_AUTH } from '@constant/error.const';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { comparePassword } from '@util/string';

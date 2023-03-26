@@ -30,16 +30,13 @@
         "src/api/*"
       ],
       "@middleware/*": [
-        "src/api/middleware/*"
-      ],
-      "@router/*": [
-        "src/api/router/*"
+        "src/middleware/*"
       ],
       "@serialization/*": [
-        "src/api/serialization/*"
+        "src/serialization/*"
       ],
       "@service/*": [
-        "src/api/service/*"
+        "src/service/*"
       ],
       // const
       "@constant/*": [

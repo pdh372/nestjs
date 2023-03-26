@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { AuthService } from '@src/api/service/auth/auth.service';
+import { AuthService } from '@src/service/auth/auth.service';
 import { Reflector } from '@nestjs/core';
 import { USER_AUTH_KEY } from './user-auth.constant';
 import { IUserAuthDecorator } from './user-auth.interface';

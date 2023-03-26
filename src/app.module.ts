@@ -2,7 +2,7 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { MorganInterceptor } from '@src/custom/interceptor/morgan';
 import { MongodbModule } from '@repository/mongodb/mongodb.module';
-import { RouterModule } from '@src/api/router/router.module';
+import { ApiModule } from '@src/api/api.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { DataBaseModule } from '@helper/database.helper';
@@ -32,7 +32,7 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
         MongodbModule,
 
         // Controller
-        RouterModule,
+        ApiModule,
 
         // Socket
         GatewayModule.forRoot({
@@ -60,14 +60,12 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
         },
         {
             provide: APP_PIPE,
-            useFactory: () => {
-                return new ValidationPipe({
-                    whitelist: true,
-                    transform: true,
-                    forbidNonWhitelisted: true,
-                    validateCustomDecorators: false, // If true maybe bug when set return req.user
-                });
-            },
+            useValue: new ValidationPipe({
+                whitelist: true,
+                transform: true,
+                forbidNonWhitelisted: true,
+                validateCustomDecorators: false, // If true maybe bug when set return req.user
+            }),
         },
         {
             provide: APP_FILTER,

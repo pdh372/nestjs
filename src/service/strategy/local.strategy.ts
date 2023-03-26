@@ -1,16 +1,16 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
-import { AuthService } from '@service/auth/auth.service';
+import { AuthService } from '@src/service/auth/auth.service';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { comparePassword } from '@util/string';
-import { userSerialization } from '@serialization/user.serialization';
+import { userSerialization } from '@src/serialization/user.serialization';
 import * as moment from 'moment';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { tempLockHelper } from 'src/helper/temp-lock.helper';
+import { tempLockHelper } from '@helper/temp-lock.helper';
 import { TL_TYPE } from '@custom/interceptor/temp-lock/temp-lock.const';
 import { plainToInstance } from 'class-transformer';
-import { UserLoginDTO } from 'src/api/router/user/user.dto';
+import { UserLoginDTO } from '@api/user/user.dto';
 import { validateSync } from 'class-validator';
 
 @Injectable()
