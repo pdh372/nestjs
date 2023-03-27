@@ -21,7 +21,7 @@ import { userSerialization } from '@serialization/user.serialization';
 import { LA_TYPE, LockAction } from '@interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
 import { AuthenException } from '@exception/authen';
-import { LocalPassport, GooglePassport } from '@module/strategy-passport';
+import { LocalPassport, GooglePassport, GithubPassport } from '@module/strategy-passport';
 import { USER_ROUTE_PUBLIC } from '@api/api.router';
 import { SIGN_UP_TYPE } from '@constant/business.const';
 import { Response } from 'express';
@@ -124,8 +124,8 @@ export class UserPublicController {
 
     @GooglePassport()
     @Get(ROUTE.LOGIN_GOOGLE)
-    async loginGoogle(@Req() req: IAppReq) {
-        return req.user;
+    async loginGoogle() {
+        console.log('someone logging with google');
     }
 
     @GooglePassport()
@@ -133,5 +133,18 @@ export class UserPublicController {
     async loginGoogleCB(@Req() req: IAppReq, @Res() res: Response) {
         const token = this.authService.signUserToken({ _id: req.user._id });
         res.redirect(`http://localhost:8080/passport?refreshToen=${token.refreshToken}`);
+    }
+
+    @GithubPassport()
+    @Get(ROUTE.LOGIN_GITHUB)
+    async loginGithub() {
+        console.log('someone logging with google');
+    }
+
+    @GithubPassport()
+    @Get(ROUTE.LOGIN_GITHUB_CB)
+    async loginGithubCB(@Req() req: IAppReq, @Res() res: Response) {
+        // const token = this.authService.signUserToken({ _id: req.user._id });
+        return req.user;
     }
 }

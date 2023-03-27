@@ -30,8 +30,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, STRATEGY_PASSPORT
         const user = this.models.User.findOneAndUpdate(
             { account: profile._json.email },
             { signupType: SIGN_UP_TYPE.GOOGLE, 'secretMetadata.google': data },
-            { upsert: true },
-        );
+            { upsert: true, new: true },
+        ).lean();
 
         return user;
     }

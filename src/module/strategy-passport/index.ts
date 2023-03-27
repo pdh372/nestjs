@@ -1,3 +1,5 @@
 export { LocalPassport } from './local/local.guard';
 export { GooglePassport } from './google/google.guard';
-export { IProfileJsonGoogle as IProfileJson } from './google/google.interface';
+export { GithubPassport } from './github/github.guard';
+
+export { IProfileJsonGoogle } from './google/google.interface';

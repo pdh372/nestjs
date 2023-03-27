@@ -13,5 +13,7 @@ export const USER_ROUTE_PUBLIC = {
         LOGIN_GOOGLE_CB: 'login-google-cb',
         SIGNUP: 'signup',
         REFRESH_TOKEN: 'refresh-token',
+        LOGIN_GITHUB: 'login-github',
+        LOGIN_GITHUB_CB: 'login-github-cb',
     },
 };

@@ -2,8 +2,8 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { AuthService } from '@service/auth/auth.service';
 import { Reflector } from '@nestjs/core';
-import { USER_AUTH_KEY } from './user-auth.constant';
-import { IUserAuthDecorator } from './user-auth.interface';
+import { USER_AT_KEY } from './at.constant';
+import { IUserATDecorator } from './at.interface';
 import { ERROR_AUTH } from '@constant/error.const';
 
 @Injectable()
@@ -18,13 +18,18 @@ export class UserATGuard implements CanActivate {
             const decoded = this.authService.verifyUserAccessToken({ accessToken });
             if (!decoded) throw new Error('AccessToken invalid.');
 
-            const reflector = this.reflector.get<IUserAuthDecorator>(USER_AUTH_KEY, context.getClass());
-            const user = await this.models.User.findById(decoded._id, reflector.selected || '');
+            const reflector = this.reflector.get<IUserATDecorator>(USER_AT_KEY, context.getHandler());
+
+            const user = reflector.isLean
+                ? await this.models.User.findById(decoded._id).lean()
+                : await this.models.User.findById(decoded._id);
+
             if (!user) throw new Error('No user');
             req.user = user;
 
             return true;
         } catch (error) {
+            console.log(error);
             if (error?.message === ERROR_AUTH.TOKEN_EXPIRED) {
                 throw new UnauthorizedException({ info: ERROR_AUTH.TOKEN_EXPIRED });
             }
