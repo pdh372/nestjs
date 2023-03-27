@@ -37,6 +37,14 @@ interface IAppConfig {
     access_token: {
         user?: string;
     };
+
+    passport: {
+        google: {
+            client_id?: string;
+            client_secret?: string;
+            cb_url?: string;
+        };
+    };
 }
 
 export const APP_DATA_CONFIG = (): IAppConfig => {
@@ -74,6 +82,14 @@ export const APP_DATA_CONFIG = (): IAppConfig => {
         },
         access_token: {
             user: process.env.JWT_SECRET_KEY,
+        },
+
+        passport: {
+            google: {
+                client_id: process.env.PASSPORT_GOOGLE_CLIENT_ID,
+                client_secret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET,
+                cb_url: process.env.PASSPORT_GOOGLE_CB_URL,
+            },
         },
     };
 };

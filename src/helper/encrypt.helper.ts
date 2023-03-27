@@ -18,14 +18,13 @@ export class EncryptService {
     encryptSchema = ({ schema, fields }: { schema: Schema; fields: string[] }) => {
         const { sanitizeEncrypt, sanitizeDecrypt, decryptFields } = this;
         // @ts-ignore
-        schema.pre(['find', 'findOne', 'countDocuments', 'exists'], function () {
+        schema.pre(['find', 'findOne', 'countDocuments', 'exists', 'findOneAndUpdate'], function () {
             fields.forEach(field => {
                 // @ts-ignore
                 if (this._conditions[field]) this._conditions[field] = sanitizeEncrypt(this._conditions[field]);
             });
         });
 
-        // @ts-ignore
         schema.pre('save', function () {
             fields.forEach(field => {
                 // @ts-ignore
@@ -33,7 +32,6 @@ export class EncryptService {
             });
         });
 
-        // @ts-ignore
         schema.post('save', function () {
             fields.forEach(field => {
                 // @ts-ignore
@@ -43,6 +41,7 @@ export class EncryptService {
 
         // @ts-ignore
         schema.post('findById', decryptFields(fields));
+        schema.post('findOneAndUpdate', decryptFields(fields));
         schema.post('findOne', decryptFields(fields));
         schema.post(['find'], function (result) {
             result.map(decryptFields(fields));

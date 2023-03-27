@@ -17,8 +17,8 @@ export const tempLockHelper = ({ req, data }: { req: IAppReq; data: ITempLockMet
     }
 
     req.session[req.attemptsKey] = (+req.session[req.attemptsKey] || 0) + 1;
-    if (req.session[req.attemptsKey] > maxAttempt) {
-        req.session[req.lockedUntilKey] = moment().add(lockTime, 'minutes').toDate();
+    if (req.session[req.attemptsKey] > req.maxAttempt) {
+        req.session[req.lockedUntilKey] = moment().add(req.lockTime, 'minutes').toDate();
         req.session[req.attemptsKey] = 0;
         return {
             req,

@@ -94,6 +94,14 @@ class EnvironmentVariables {
     JWT_PUBLIC_KEY: string;
     @IsString()
     JWT_SECRET_KEY: string;
+
+    // Passport Google
+    @IsString()
+    PASSPORT_GOOGLE_CLIENT_ID: string;
+    @IsString()
+    PASSPORT_GOOGLE_CLIENT_SECRET: string;
+    @IsString()
+    PASSPORT_GOOGLE_CB_URL: string;
 }
 
 export function validateEnvironment(config: Record<string, unknown>) {

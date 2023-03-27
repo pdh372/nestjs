@@ -9,6 +9,8 @@ import {
     UnauthorizedException,
     UseFilters,
     ConflictException,
+    Get,
+    Res,
 } from '@nestjs/common';
 import { AuthService } from '@service/auth/auth.service';
 import { UserSignUpDTO, RefreshTokenDTO } from '@api/user/user.dto';
@@ -18,9 +20,11 @@ import { hashPassword } from '@util/string';
 import { userSerialization } from '@serialization/user.serialization';
 import { LA_TYPE, LockAction } from '@interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
-import { AuthenException } from '@exception/authen/authen.exception';
-import { LocalPassport } from '@module/strategy-passport';
+import { AuthenException } from '@exception/authen';
+import { LocalPassport, GooglePassport } from '@module/strategy-passport';
 import { USER_ROUTE_PUBLIC } from '@api/api.router';
+import { SIGN_UP_TYPE } from '@constant/business.const';
+import { Response } from 'express';
 
 const { CONTROLLER, ROUTE } = USER_ROUTE_PUBLIC;
 
@@ -44,7 +48,8 @@ export class UserPublicController {
 
             const newUser = await this.models.User.create({
                 password: await hashPassword(password),
-                mobileNumber,
+                account: mobileNumber,
+                signupType: SIGN_UP_TYPE.LOCAL,
             });
 
             req.session[req.attemptsKey] = 0;
@@ -109,11 +114,24 @@ export class UserPublicController {
 
     @LocalPassport()
     @HttpCode(HttpStatus.OK)
-    @Post(ROUTE.LOGIN)
+    @Post(ROUTE.LOGIN_LOCAL)
     async loginLocal(@Req() req: IAppReq) {
         return {
             token: this.authService.signUserToken({ _id: req.user._id }),
             user: userSerialization(req.user),
         };
+    }
+
+    @GooglePassport()
+    @Get(ROUTE.LOGIN_GOOGLE)
+    async loginGoogle(@Req() req: IAppReq) {
+        return req.user;
+    }
+
+    @GooglePassport()
+    @Get(ROUTE.LOGIN_GOOGLE_CB)
+    async loginGoogleCB(@Req() req: IAppReq, @Res() res: Response) {
+        const token = this.authService.signUserToken({ _id: req.user._id });
+        res.redirect(`http://localhost:8080/passport?refreshToen=${token.refreshToken}`);
     }
 }

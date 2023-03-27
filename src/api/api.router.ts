@@ -8,7 +8,9 @@ export const USER_ROUTE_AUTH = {
 export const USER_ROUTE_PUBLIC = {
     CONTROLLER: 'user/public',
     ROUTE: {
-        LOGIN: 'login',
+        LOGIN_LOCAL: 'login-local',
+        LOGIN_GOOGLE: 'login-google',
+        LOGIN_GOOGLE_CB: 'login-google-cb',
         SIGNUP: 'signup',
         REFRESH_TOKEN: 'refresh-token',
     },

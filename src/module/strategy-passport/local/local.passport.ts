@@ -7,12 +7,12 @@ import * as moment from 'moment';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { tempLockHelper } from '@helper/temp-lock.helper';
 import { TL_TYPE } from '@interceptor/temp-lock/temp-lock.const';
-import { plainToInstance } from 'class-transformer';
 import { UserLoginDTO } from '@api/user/user.dto';
-import { validateSync } from 'class-validator';
+import { validateBody } from '@util/validate';
+import { STRATEGY_PASSPORT_TYPE } from '@module/strategy-passport/strategy-passport.const';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, STRATEGY_PASSPORT_TYPE.LOCAL) {
     constructor(private models: MongodbService) {
         super({ passReqToCallback: true, usernameField: 'mobileNumber', session: true });
     }
@@ -25,11 +25,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             }
 
             req = isTempLocked.req;
-            const body = plainToInstance(UserLoginDTO, req.body);
+
             // eslint-disable-next-line no-var
-            var errors: any[] = validateSync(body, { skipMissingProperties: false });
+            var errors = await validateBody({ classDTO: UserLoginDTO, data: req.body });
             if (errors.length > 0) {
-                errors = errors.map(e => Object.values(e.constraints)).flat();
                 throw new Error(ERROR_AUTH.BAD_REQUEST);
             }
 
@@ -76,6 +75,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
                 }
 
                 case ERROR_AUTH.BAD_REQUEST: {
+                    if (failed >= req.maxAttempt) {
+                        req.session[req.attemptsKey] = 0;
+                        req.session[req.lockedUntilKey] = moment().add(req.lockTime, 'minutes').toDate();
+                    }
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     throw new BadRequestException(errors);

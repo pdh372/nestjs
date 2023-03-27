@@ -22,7 +22,7 @@ export class TempLockInterceptor implements NestInterceptor {
         const reflector = this.reflector.get<ITempLockMetadata>(TEMP_LOCK_KEY, context.getHandler());
         if (!reflector) throw new InternalServerErrorException();
 
-        const { lockType, maxAttempt = 5, lockTime = 5 } = reflector;
+        const { lockType, maxAttempt, lockTime } = reflector;
         const isTempLocked = tempLockHelper({ req, data: { lockType, maxAttempt, lockTime } });
 
         if (isTempLocked.error) {

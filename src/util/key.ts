@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 function generateRandomString(length: number) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$%^&*()_+{}[]|\\:;"<>,.?/~`';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$%^&*()_+{}[]|\\:;<>,.?/~`';
     const randomBytes = crypto.randomBytes(length);
     let result = '';
     for (let i = 0; i < length; i++) {

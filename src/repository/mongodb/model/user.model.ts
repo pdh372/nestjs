@@ -5,16 +5,25 @@ import { Document, Types } from 'mongoose';
 import { EncryptService } from '@helper/encrypt.helper';
 import { ICreateSchema } from '../mongodb.interface';
 import { EncryptModule } from '@helper/encrypt.helper';
+import { IProfileJson } from '@module/strategy-passport';
 
 @Schema()
 export class User extends Document {
     _id: Types.ObjectId;
 
-    @Prop({ required: true })
-    mobileNumber: string;
+    @Prop({ required: true, type: String, unique: true })
+    account: string;
+
+    @Prop({ required: true, type: String })
+    signupType: string;
 
     @Prop({ required: true })
     password: string;
+
+    @Prop({ type: Object })
+    secretMetadata: {
+        google: IProfileJson;
+    };
 
     createdAt: Date;
     updatedAt: Date;
@@ -22,7 +31,7 @@ export class User extends Document {
 
 @Injectable()
 export class UserModelService implements ICreateSchema {
-    private ENCRYPT_FIELDS = ['mobileNumber'];
+    private ENCRYPT_FIELDS = ['account'];
     constructor(private readonly encryptService: EncryptService) {}
 
     createSchema() {
@@ -31,8 +40,6 @@ export class UserModelService implements ICreateSchema {
         const UserSchema = SchemaFactory.createForClass(User)
             .set('collection', 'users')
             .set('timestamps', { createdAt: true, updatedAt: true });
-
-        UserSchema.index({ mobileNumber: 1 }, { unique: true });
 
         return encryptSchema({ schema: UserSchema, fields: this.ENCRYPT_FIELDS });
     }
