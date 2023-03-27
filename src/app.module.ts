@@ -12,7 +12,7 @@ import { GatewayModule } from '@module/gateway/gateway.module';
 import { SOCKET_PROVIDERS } from '@socket/index.socket';
 import { RedisModule } from '@module/redis/redis.module';
 import * as INJECT_TOKEN from '@constant/injection-token.const';
-import { AllHttpException } from '@exception/global.exception';
+import { AllHttpException } from '@exception/global/global.exception';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronJobService } from '@module/cronJob/cronJob.service';
 @Module({

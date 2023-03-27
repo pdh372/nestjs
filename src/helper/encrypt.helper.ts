@@ -4,8 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
 import * as INJECT_TOKEN from '@constant/injection-token.const';
-import { IInjectTokenEncrypt } from '@interface/use-provider.interface';
 import { Schema } from 'mongoose';
+
+interface IInjectTokenEncrypt {
+    key: string;
+    iv: string;
+}
 
 @Injectable()
 export class EncryptService {

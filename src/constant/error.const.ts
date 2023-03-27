@@ -9,7 +9,7 @@ export const ERROR_AUTH = {
 };
 
 export const ERROR_USER = {
-    ACCOUNT_EXISTS: 'account_exists',
+    ACCOUNT_ALREADY_EXISTS: 'account_already_exists',
     ACCOUNT_NOT_FOUND: 'account_not_found',
     PASSWORD_NOT_MATCH: 'password_not_match',
 };

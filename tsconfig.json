@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./src/interface"
+      "src/types"
     ],
     "paths": {
       // api
@@ -52,10 +52,6 @@
       // helper
       "@helper/*": [
         "src/helper/*"
-      ],
-      // interface
-      "@interface/*": [
-        "src/interface/*"
       ],
       // module
       "@module/*": [

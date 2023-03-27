@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { LocalStrategy } from '@service/strategy/local.strategy';
+import { LocalStrategy } from './local/local.strategy';
 
 @Module({
     providers: [LocalStrategy],
     exports: [LocalStrategy],
 })
-export class MyPassportStrategyModule {}
+export class StrategyPassportModule {}

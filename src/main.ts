@@ -1,5 +1,3 @@
-// import '@router/app/template/2_provider/mindset';
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
 import { LOGGERS } from '@constant/config.const';

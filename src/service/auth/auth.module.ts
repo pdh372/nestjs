@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
 import * as IT from '@constant/injection-token.const';
 import { TRoleSign } from '@service/auth/auth.interface';
-import { MyPassportStrategyModule } from '@service/strategy/strategy.module';
+import { StrategyPassportModule } from '@module/strategy-passport/strategy-passport.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Global()
@@ -49,7 +49,7 @@ export class AuthModule {
 
         return {
             module: AuthModule,
-            imports: [PassportModule, MyPassportStrategyModule],
+            imports: [PassportModule, StrategyPassportModule],
             providers: [AuthService, ...providers],
             exports: [AuthService],
         };

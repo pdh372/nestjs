@@ -49,7 +49,6 @@ export class LockActionInterceptor implements NestInterceptor {
 
         return next.handle().pipe(
             tap(() => {
-                // delete key redis after handler response
                 req.keys && this.redisWriter.client.del(req.keys);
             }),
             catchError(err => {

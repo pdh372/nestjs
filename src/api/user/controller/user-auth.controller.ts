@@ -4,16 +4,17 @@ import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { userSerialization } from '@serialization/user.serialization';
 import { UserDecorator, UserAuth } from '@guard/user-auth';
 import { User } from '@repository/mongodb/model/user.model';
-import { USER_ROUTE } from '@api/api.const';
+import { USER_ROUTE_AUTH } from '@api/api.router';
+
+const { CONTROLLER, ROUTE } = USER_ROUTE_AUTH;
 
 @UserAuth()
-@Controller({ path: USER_ROUTE.AUTH.CONTROLLER })
+@Controller({ path: CONTROLLER })
 export class UserAuthController {
     constructor(private authService: AuthService, private models: MongodbService) {}
 
-    @Get(USER_ROUTE.AUTH.ROUTE.ME)
+    @Get(ROUTE.ME)
     getMe(@UserDecorator() user: User) {
-        console.log(user);
         return { user: userSerialization(user) };
     }
 }

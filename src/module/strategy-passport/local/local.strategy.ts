@@ -1,10 +1,8 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
-import { AuthService } from '@service/auth/auth.service';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { comparePassword } from '@util/string';
-import { userSerialization } from '@serialization/user.serialization';
 import * as moment from 'moment';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { tempLockHelper } from '@helper/temp-lock.helper';
@@ -15,7 +13,7 @@ import { validateSync } from 'class-validator';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService, private models: MongodbService) {
+    constructor(private models: MongodbService) {
         super({ passReqToCallback: true, usernameField: 'mobileNumber', session: true });
     }
 
@@ -47,10 +45,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             req.session[req.attemptsKey] = 0;
             req.session[req.lockedUntilKey] = undefined;
 
-            return {
-                token: this.authService.signUserToken({ _id: user._id }),
-                user: userSerialization(user),
-            };
+            return user;
         } catch (error) {
             const failed = req.session[req.attemptsKey];
             let lockedUntil = req.session[req.lockedUntilKey];

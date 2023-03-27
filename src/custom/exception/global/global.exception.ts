@@ -13,12 +13,10 @@ import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { Response } from 'express';
-import { IWriteHttpErrorLog } from '@interface/custom.interface';
+import { IWriteHttpErrorLog, IWriteWsErrorLog, ILogInternal, ILogValidate } from './global-exception.interface';
 import { Socket } from 'socket.io';
-import { IWriteWsErrorLog } from '@interface/custom.interface';
 import { EVENT_PUB } from '@constant/event-socket.const';
 import { BadRequestException } from '@nestjs/common';
-import { ILogInternal, ILogValidate } from '@interface/custom.interface';
 
 @Catch()
 export class AllHttpException implements ExceptionFilter {

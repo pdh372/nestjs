@@ -1,5 +1,5 @@
 import { ModelDefinition } from '@nestjs/mongoose';
-import { IAsyncModelFactory } from '@interface/mongodb.interface';
+import { IAsyncModelFactory } from './mongodb.interface';
 
 import { UserModelService, UserModelModule } from './model/user.model';
 import { Movie, MovieSchema } from './model/movie.model';

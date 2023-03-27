@@ -7,35 +7,40 @@ import {
     HttpStatus,
     HttpCode,
     UnauthorizedException,
-    UseGuards,
     UseFilters,
+    ConflictException,
 } from '@nestjs/common';
 import { AuthService } from '@service/auth/auth.service';
-import { UserSignUpDTO, UserLoginDTO, RefreshTokenDTO } from '@api/user/user.dto';
+import { UserSignUpDTO, RefreshTokenDTO } from '@api/user/user.dto';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
-import { hashPassword, comparePassword } from '@util/string';
+import { hashPassword } from '@util/string';
 import { userSerialization } from '@serialization/user.serialization';
-import * as moment from 'moment';
 import { LA_TYPE, LockAction } from '@interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
-import { AuthGuard } from '@nestjs/passport';
-import { AuthenException } from '@exception/authen.exception';
+import { AuthenException } from '@exception/authen/authen.exception';
+import { LocalPassport } from '@module/strategy-passport';
+import { USER_ROUTE_PUBLIC } from '@api/api.router';
+
+const { CONTROLLER, ROUTE } = USER_ROUTE_PUBLIC;
 
 @UseFilters(AuthenException)
-@Controller({ path: 'user/public' })
+@Controller({ path: CONTROLLER })
 export class UserPublicController {
     constructor(private authService: AuthService, private models: MongodbService) {}
 
     @LockAction({ lockType: LA_TYPE.SIGNUP })
     @TempLock({ lockType: TL_TYPE.SIGNUP })
-    @Post('signup')
+    @Post(ROUTE.SIGNUP)
     async signupLocal(@Body() body: UserSignUpDTO, @Req() req: IAppReq) {
         try {
             const { mobileNumber, password } = body;
 
             const isExists = await this.models.User.exists({ mobileNumber });
-            if (isExists) throw new Error(ERROR_USER.ACCOUNT_EXISTS);
+            if (isExists) {
+                req.session[req.attemptsKey]--;
+                throw new Error(ERROR_USER.ACCOUNT_ALREADY_EXISTS);
+            }
 
             const newUser = await this.models.User.create({
                 password: await hashPassword(password),
@@ -51,16 +56,12 @@ export class UserPublicController {
             };
         } catch (error) {
             const failed = req.session[req.attemptsKey];
-            let lockedUntil = req.session[req.lockedUntilKey];
+            const lockedUntil = req.session[req.lockedUntilKey];
+            const info = error.message;
 
-            switch (error.message) {
-                case ERROR_USER.ACCOUNT_EXISTS: {
-                    if (failed >= req.maxAttempt) {
-                        req.session[req.attemptsKey] = 0;
-                        lockedUntil = moment().add(req.lockTime, 'minutes').toDate();
-                        req.session[req.lockedUntilKey] = lockedUntil;
-                    }
-                    break;
+            switch (info) {
+                case ERROR_USER.ACCOUNT_ALREADY_EXISTS: {
+                    throw new ConflictException({ info });
                 }
 
                 default: {
@@ -80,69 +81,6 @@ export class UserPublicController {
             }
 
             throw new UnauthorizedException({
-                info: ERROR_AUTH.SIGNUP_UNSUCCESSFULLY,
-                lockedUntil,
-                failed,
-            });
-        }
-    }
-
-    @TempLock({ lockType: TL_TYPE.LOGIN })
-    @HttpCode(HttpStatus.OK)
-    @Post('login')
-    async loginLocal(@Body() body: UserLoginDTO, @Req() req: IAppReq) {
-        try {
-            const { mobileNumber, password } = body;
-
-            const user = await this.models.User.findOne({ mobileNumber }).lean();
-            if (!user) {
-                throw new Error(ERROR_USER.ACCOUNT_NOT_FOUND);
-            }
-            if (!(await comparePassword(password, user.password))) {
-                throw new Error(ERROR_USER.PASSWORD_NOT_MATCH);
-            }
-
-            req.session[req.attemptsKey] = 0;
-            req.session[req.lockedUntilKey] = undefined;
-
-            return {
-                token: this.authService.signUserToken({ _id: user._id }),
-                user: userSerialization(user),
-            };
-        } catch (error) {
-            const failed = req.session[req.attemptsKey];
-            let lockedUntil = req.session[req.lockedUntilKey];
-            let info = ERROR_AUTH.LOGIN_UNSUCCESSFULLY;
-
-            switch (error.message) {
-                case ERROR_USER.PASSWORD_NOT_MATCH:
-                case ERROR_USER.ACCOUNT_NOT_FOUND: {
-                    if (failed >= req.maxAttempt) {
-                        info = ERROR_AUTH.TEMP_LOCKED;
-                        req.session[req.attemptsKey] = 0;
-                        lockedUntil = moment().add(req.lockTime, 'minutes').toDate();
-                        req.session[req.lockedUntilKey] = lockedUntil;
-                    }
-                    break;
-                }
-
-                default: {
-                    break;
-                }
-            }
-
-            if (lockedUntil) {
-                throw new HttpException(
-                    {
-                        info,
-                        lockedUntil: req.session[req.lockedUntilKey],
-                        failed: req.maxAttempt,
-                    },
-                    HttpStatus.TOO_MANY_REQUESTS,
-                );
-            }
-
-            throw new UnauthorizedException({
                 info,
                 lockedUntil,
                 failed,
@@ -151,7 +89,7 @@ export class UserPublicController {
     }
 
     @TempLock({ lockType: TL_TYPE.REFRESH_TOKEN })
-    @Post('refreshToken')
+    @Post(ROUTE.REFRESH_TOKEN)
     async handleRefreshToken(@Body() body: RefreshTokenDTO, @Req() req: IAppReq) {
         const { refreshToken } = body;
 
@@ -169,10 +107,13 @@ export class UserPublicController {
         };
     }
 
+    @LocalPassport()
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthGuard('local'))
-    @Post('test')
-    async test(@Req() req: IAppReq) {
-        return req.user;
+    @Post(ROUTE.LOGIN)
+    async loginLocal(@Req() req: IAppReq) {
+        return {
+            token: this.authService.signUserToken({ _id: req.user._id }),
+            user: userSerialization(req.user),
+        };
     }
 }

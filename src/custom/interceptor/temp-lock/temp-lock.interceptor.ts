@@ -10,52 +10,34 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ITempLockMetadata } from './temp-lock.interface';
 import { TEMP_LOCK_KEY } from './temp-lock.const';
-import * as moment from 'moment';
 import { ERROR_AUTH } from '@constant/error.const';
+import { tempLockHelper } from '@helper/temp-lock.helper';
 
 @Injectable()
 export class TempLockInterceptor implements NestInterceptor {
     constructor(private reflector: Reflector) {}
     intercept(context: ExecutionContext, next: CallHandler<any>) {
-        const req = context.switchToHttp().getRequest<IAppReq>();
+        let req = context.switchToHttp().getRequest<IAppReq>();
 
-        const data = this.reflector.get<ITempLockMetadata>(TEMP_LOCK_KEY, context.getHandler());
-        if (!data) throw new InternalServerErrorException();
+        const reflector = this.reflector.get<ITempLockMetadata>(TEMP_LOCK_KEY, context.getHandler());
+        if (!reflector) throw new InternalServerErrorException();
 
-        const { lockType, maxAttempt = 5, lockTime = 5 } = data;
+        const { lockType, maxAttempt = 5, lockTime = 5 } = reflector;
+        const isTempLocked = tempLockHelper({ req, data: { lockType, maxAttempt, lockTime } });
 
-        req.attemptsKey = `${lockType}_attempts`;
-        req.lockedUntilKey = `${lockType}_locked_until`;
-        req.maxAttempt = maxAttempt;
-        req.lockTime = lockTime;
-
-        if (req.session[req.lockedUntilKey] > new Date()) {
+        if (isTempLocked.error) {
             throw new HttpException(
                 {
                     info: ERROR_AUTH.TEMP_LOCKED,
                     lockedUntil: req.session[req.lockedUntilKey],
-                    failed: maxAttempt,
+                    failed: req.maxAttempt,
                 },
                 HttpStatus.TOO_MANY_REQUESTS,
             );
         }
 
-        req.session[req.attemptsKey] = (+req.session[req.attemptsKey] || 0) + 1;
-        if (req.session[req.attemptsKey] > maxAttempt) {
-            req.session[req.lockedUntilKey] = moment().add(lockTime, 'minutes').toDate();
-            req.session[req.attemptsKey] = 0;
+        req = isTempLocked.req;
 
-            throw new HttpException(
-                {
-                    info: ERROR_AUTH.TEMP_LOCKED,
-                    lockedUntil: req.session[req.lockedUntilKey],
-                    failed: maxAttempt,
-                },
-                HttpStatus.TOO_MANY_REQUESTS,
-            );
-        }
-
-        req.session[req.lockedUntilKey] = undefined;
         return next.handle();
     }
 }

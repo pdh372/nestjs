@@ -1,6 +1,43 @@
 import { LogLevel } from '@nestjs/common';
-import { IAppConfig } from '@interface/config.interface';
-import { INodeENV } from '@interface/config.interface';
+
+type INodeENV = 'development' | 'production' | 'staging' | 'pentest';
+
+interface IAppConfig {
+    app_name?: string;
+    node_env?: INodeENV;
+    port?: number;
+    cors_origins?: string;
+
+    debug_mongoose_transaction?: boolean;
+    debug_mongoose_model?: boolean;
+    debug_global_request_data?: boolean;
+    debug_global_interceptor?: boolean;
+
+    mongodb_url?: string;
+
+    cipher_key?: string;
+    cipher_iv?: string;
+
+    useragent?: boolean;
+    compression?: boolean;
+    session_secret?: string;
+    session_name?: string;
+    session_cookie_max_age?: number;
+    session_store_expire?: number;
+
+    redis_url?: string;
+    redis_database?: number;
+
+    refresh_token: {
+        user?: {
+            private_key?: Buffer;
+            public_key?: Buffer;
+        };
+    };
+    access_token: {
+        user?: string;
+    };
+}
 
 export const APP_DATA_CONFIG = (): IAppConfig => {
     return {
