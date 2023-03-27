@@ -1,5 +1,5 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
-import { InitGateway } from '@src/module/gateway/gateway.module';
+import { InitGateway } from '@module/gateway/gateway.module';
 
 @WebSocketGateway({ namespace: 'public', cors: { origin: ['http2'] } })
 export class PublicGateway extends InitGateway {

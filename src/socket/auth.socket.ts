@@ -1,5 +1,5 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, OnGatewayInit } from '@nestjs/websockets';
-import { InitGateway } from '@src/module/gateway/gateway.module';
+import { InitGateway } from '@module/gateway/gateway.module';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { Socket } from 'socket.io';
 import { appColor } from '@helper/chalk.helper';

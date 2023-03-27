@@ -1,10 +1,10 @@
 // import '@router/app/template/2_provider/mindset';
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@src/app.module';
+import { AppModule } from 'src/app.module';
 import { LOGGERS } from '@constant/config.const';
 import { appColor } from '@helper/chalk.helper';
-import { AppService } from '@src/app.service';
+import { AppService } from 'src/app.service';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {

@@ -16,9 +16,9 @@ import { Response } from 'express';
 import { IWriteHttpErrorLog } from '@interface/custom.interface';
 import { Socket } from 'socket.io';
 import { IWriteWsErrorLog } from '@interface/custom.interface';
-import { EVENT_PUB } from '@src/constant/event-socket.const';
+import { EVENT_PUB } from '@constant/event-socket.const';
 import { BadRequestException } from '@nestjs/common';
-import { ILogInternal, ILogValidate } from 'src/interface/custom.interface';
+import { ILogInternal, ILogValidate } from '@interface/custom.interface';
 
 @Catch()
 export class AllHttpException implements ExceptionFilter {

@@ -10,18 +10,19 @@ import {
     UseGuards,
     UseFilters,
 } from '@nestjs/common';
-import { AuthService } from '@src/service/auth/auth.service';
+import { AuthService } from '@service/auth/auth.service';
 import { UserSignUpDTO, UserLoginDTO, RefreshTokenDTO } from '@api/user/user.dto';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { hashPassword, comparePassword } from '@util/string';
-import { userSerialization } from '@src/serialization/user.serialization';
+import { userSerialization } from '@serialization/user.serialization';
 import * as moment from 'moment';
-import { LA_TYPE, LockAction } from '@custom/interceptor/lock-action';
-import { TL_TYPE, TempLock } from '@custom/interceptor/temp-lock';
+import { LA_TYPE, LockAction } from '@interceptor/lock-action';
+import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
 import { AuthGuard } from '@nestjs/passport';
-import { PassportException } from '@src/custom/exception/passport.exception';
+import { AuthenException } from '@exception/authen.exception';
 
+@UseFilters(AuthenException)
 @Controller({ path: 'user/public' })
 export class UserPublicController {
     constructor(private authService: AuthService, private models: MongodbService) {}
@@ -170,7 +171,6 @@ export class UserPublicController {
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard('local'))
-    @UseFilters(PassportException)
     @Post('test')
     async test(@Req() req: IAppReq) {
         return req.user;

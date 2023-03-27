@@ -5,8 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
 import * as IT from '@constant/injection-token.const';
-import { TRoleSign } from '@src/service/auth/auth.interface';
-import { MyPassportStrategyModule } from '@src/service/strategy/strategy.module';
+import { TRoleSign } from '@service/auth/auth.interface';
+import { MyPassportStrategyModule } from '@service/strategy/strategy.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Global()

@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { ITempLockMetadata } from '@custom/interceptor/temp-lock';
+import { ITempLockMetadata } from '@interceptor/temp-lock';
 import { ERROR_AUTH } from '@constant/error.const';
 
 export const tempLockHelper = ({ req, data }: { req: IAppReq; data: ITempLockMetadata }) => {

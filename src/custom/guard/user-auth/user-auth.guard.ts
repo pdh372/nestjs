@@ -1,10 +1,10 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { AuthService } from '@src/service/auth/auth.service';
+import { AuthService } from '@service/auth/auth.service';
 import { Reflector } from '@nestjs/core';
 import { USER_AUTH_KEY } from './user-auth.constant';
 import { IUserAuthDecorator } from './user-auth.interface';
-import { ERROR_AUTH } from 'src/constant/error.const';
+import { ERROR_AUTH } from '@constant/error.const';
 
 @Injectable()
 export class UserATGuard implements CanActivate {

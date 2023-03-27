@@ -22,9 +22,6 @@
       "./src/interface"
     ],
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
       // api
       "@api/*": [
         "src/api/*"
@@ -43,8 +40,8 @@
         "src/constant/*"
       ],
       // custom
-      "@custom/*": [
-        "src/custom/*"
+      "@exception/*": [
+        "src/custom/exception/*"
       ],
       "@guard/*": [
         "src/custom/guard/*"

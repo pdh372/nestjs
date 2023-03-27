@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { AuthService } from '@src/service/auth/auth.service';
+import { AuthService } from '@service/auth/auth.service';
 import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { userSerialization } from '@src/serialization/user.serialization';
-import { UserDecorator, UserAuth } from '@custom/guard/user-auth';
+import { userSerialization } from '@serialization/user.serialization';
+import { UserDecorator, UserAuth } from '@guard/user-auth';
 import { User } from '@repository/mongodb/model/user.model';
-import { USER_ROUTE } from '@src/api/api.const';
+import { USER_ROUTE } from '@api/api.const';
 
 @UserAuth()
 @Controller({ path: USER_ROUTE.AUTH.CONTROLLER })

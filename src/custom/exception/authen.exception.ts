@@ -5,7 +5,7 @@ import { ERROR_AUTH } from '@constant/error.const';
 import * as moment from 'moment';
 
 @Catch(BadRequestException)
-export class PassportException implements ExceptionFilter {
+export class AuthenException implements ExceptionFilter {
     constructor(private readonly httpAdapterHost: HttpAdapterHost, private readonly reflector: Reflector) {}
 
     async catch(exception: BadRequestException, host: ArgumentsHost): Promise<void> {
