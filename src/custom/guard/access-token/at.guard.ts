@@ -29,7 +29,6 @@ export class UserATGuard implements CanActivate {
 
             return true;
         } catch (error) {
-            console.log(error);
             if (error?.message === ERROR_AUTH.TOKEN_EXPIRED) {
                 throw new UnauthorizedException({ info: ERROR_AUTH.TOKEN_EXPIRED });
             }

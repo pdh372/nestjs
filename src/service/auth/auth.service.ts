@@ -54,13 +54,10 @@ export class AuthService {
         };
     }
 
-    async validateUser(mobileNumber: string, pass: string): Promise<User | null> {
-        const user = await this.models.User.findOne({ mobileNumber });
-
-        if (user && (await comparePassword(pass, user.password))) {
-            return user;
-        }
-
-        return null;
+    signUserRefreshToken(params: { _id: string | Types.ObjectId }) {
+        const data: IUserVerified = { _id: params._id.toString() };
+        return {
+            refreshToken: this.userRefreshToken.sign(data),
+        };
     }
 }

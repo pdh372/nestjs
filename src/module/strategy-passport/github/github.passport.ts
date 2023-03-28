@@ -5,26 +5,32 @@ import { STRATEGY_PASSPORT_TYPE } from '@module/strategy-passport/strategy-passp
 import { MongodbService } from '@repository/mongodb/mongodb.service';
 import { SIGN_UP_TYPE } from '@constant/business.const';
 import { ConfigService } from '@nestjs/config';
+import { IProfileJson } from '@module/strategy-passport/strategy-passport.interface';
+import { UserService } from '@service/user/user.service';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, STRATEGY_PASSPORT_TYPE.GITHUB) {
-    constructor(private models: MongodbService, @Inject(ConfigService) configService: IConfigService) {
+    constructor(@Inject(ConfigService) configService: IConfigService, private userService: UserService) {
         super({
-            clientID: 'd82276bd9fc4de1d5d74',
-            clientSecret: 'ef1f34bd99c3b2e2209531bce80e069d9859b45d',
-            callbackURL: 'http://localhost:3001/user/public/login-github-cb',
+            clientID: configService.get('passport.github.client_id'),
+            clientSecret: configService.get('passport.github.client_secret'),
+            callbackURL: configService.get('passport.cb') + 'user/public/login-github-cb',
             scope: ['user:email'],
         });
     }
+
     async validate(accessToken: string, _: string, profile: any) {
-        console.log(accessToken, profile._json);
+        const data: IProfileJson = {
+            accessToken,
+            ppid: profile._json.id,
+            name: profile._json.name,
+            avt_url: profile._json.avatar_url,
+        };
 
-        // const user = this.models.User.findOneAndUpdate(
-        //     { account: profile._json.email },
-        //     { signupType: SIGN_UP_TYPE.GOOGLE, 'secretMetadata.google': data },
-        //     { upsert: true, new: true },
-        // ).lean();
-
-        return '123';
+        return await this.userService.loginWithPassport({
+            account: profile._json.email,
+            signupType: SIGN_UP_TYPE.GITHUB,
+            data,
+        });
     }
 }

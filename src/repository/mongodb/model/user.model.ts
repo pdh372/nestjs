@@ -5,7 +5,7 @@ import { Document, Types } from 'mongoose';
 import { EncryptService } from '@helper/encrypt.helper';
 import { ICreateSchema } from '../mongodb.interface';
 import { EncryptModule } from '@helper/encrypt.helper';
-import { IProfileJsonGoogle } from '@module/strategy-passport';
+import { IProfileJson } from '@module/strategy-passport';
 
 @Schema()
 export class User extends Document {
@@ -22,7 +22,7 @@ export class User extends Document {
 
     @Prop({ type: Object })
     secretMetadata: {
-        google: IProfileJsonGoogle;
+        passport: IProfileJson;
     };
 
     createdAt: Date;

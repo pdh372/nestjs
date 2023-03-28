@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
 import * as IT from '@constant/injection-token.const';
 import { TRoleSign } from '@service/auth/auth.interface';
-import { StrategyPassportModule } from '@module/strategy-passport/strategy-passport.module';
-import { PassportModule } from '@nestjs/passport';
+import { UserService } from './user/user.service';
 
 @Global()
 @Module({})
-export class AuthModule {
+export class ServiceModule {
     static register(): DynamicModule {
         const roles: TRoleSign[] = [
             {
@@ -48,10 +47,9 @@ export class AuthModule {
         });
 
         return {
-            module: AuthModule,
-            imports: [PassportModule, StrategyPassportModule],
-            providers: [AuthService, ...providers],
-            exports: [AuthService],
+            module: ServiceModule,
+            providers: [AuthService, UserService, ...providers],
+            exports: [AuthService, UserService],
         };
     }
 }

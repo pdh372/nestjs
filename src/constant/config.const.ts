@@ -39,10 +39,15 @@ interface IAppConfig {
     };
 
     passport: {
+        response_fe?: string;
+        cb?: string;
         google: {
             client_id?: string;
             client_secret?: string;
-            cb_url?: string;
+        };
+        github: {
+            client_id?: string;
+            client_secret?: string;
         };
     };
 }
@@ -85,10 +90,15 @@ export const APP_DATA_CONFIG = (): IAppConfig => {
         },
 
         passport: {
+            response_fe: process.env.PASSPORT_FE_URL,
+            cb: process.env.PASSPORT_BE_CB,
             google: {
                 client_id: process.env.PASSPORT_GOOGLE_CLIENT_ID,
                 client_secret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET,
-                cb_url: process.env.PASSPORT_GOOGLE_CB_URL,
+            },
+            github: {
+                client_id: process.env.PASSPORT_GITHUB_CLIENT_ID,
+                client_secret: process.env.PASSPORT_GITHUB_CLIENT_SECRET,
             },
         },
     };
