@@ -34,7 +34,10 @@ import * as INJECT_TOKEN from '@constant/injection-token.const';
 
         // Cache
         RedisModule.forRoot({
-            configs: [{ it: INJECT_TOKEN.REDIS.WRITER }, { it: INJECT_TOKEN.REDIS.THROTTLER }],
+            configs: [
+                { it: INJECT_TOKEN.REDIS.WRITER }, //
+                // { it: INJECT_TOKEN.REDIS.THROTTLER },
+            ],
         }),
 
         // Cron Job

@@ -30,7 +30,7 @@
         "src/middleware/*"
       ],
       "@serialization/*": [
-        "src/serialization/*"
+        "src/util/serialization/*"
       ],
       "@service/*": [
         "src/service/*"
@@ -61,13 +61,13 @@
       "@repository/*": [
         "src/repository/*"
       ],
-      // socket
-      "@socket/*": [
-        "src/socket/*"
-      ],
       //util
       "@util/*": [
         "src/util/*"
+      ],
+      // models
+      "@model/*": [
+        "src/model/*"
       ],
     }
   },

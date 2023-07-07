@@ -1,4 +1,4 @@
-import { MongodbService } from '@module/mongodb/mongodb.service';
+import { MongodbService } from 'src/model';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

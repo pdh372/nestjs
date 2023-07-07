@@ -12,21 +12,18 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '@service/auth/auth.service';
 import { UserSignUpDTO, RefreshTokenDTO } from '@api/user/user.dto';
-import { MongodbService } from '@module/mongodb/mongodb.service';
+import { MongodbService } from 'src/model';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { hashPassword } from '@util/string';
-import { userSerialization } from '@serialization/index';
+import { userSerialization } from '@util/serialization';
 import { LA_TYPE, LockAction } from '@interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
 import { AuthenException } from '@exception/authen';
-import { USER_ROUTE_PUBLIC } from '@api/api.router';
 import { SIGN_UP_TYPE } from '@constant/business.const';
 import { ConfigService } from '@nestjs/config';
 
-const { CONTROLLER, ROUTE } = USER_ROUTE_PUBLIC;
-
 @UseFilters(AuthenException)
-@Controller({ path: CONTROLLER })
+@Controller({ path: 'user' })
 export class UserPublicController {
     constructor(
         private authService: AuthService,
@@ -36,7 +33,7 @@ export class UserPublicController {
 
     @LockAction({ lockType: LA_TYPE.SIGNUP })
     @TempLock({ lockType: TL_TYPE.SIGNUP })
-    @Post(ROUTE.SIGNUP)
+    @Post('signup')
     async signupLocal(@Body() body: UserSignUpDTO, @Req() req: IAppReq) {
         try {
             const { mobileNumber, password } = body;
@@ -95,7 +92,7 @@ export class UserPublicController {
     }
 
     @TempLock({ lockType: TL_TYPE.REFRESH_TOKEN })
-    @Post(ROUTE.REFRESH_TOKEN)
+    @Post('refresh-token')
     async handleRefreshToken(@Body() body: RefreshTokenDTO, @Req() req: IAppReq) {
         const { refreshToken } = body;
 

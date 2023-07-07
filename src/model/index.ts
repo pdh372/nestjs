@@ -6,16 +6,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 // models
-import { Movie } from '@module/mongodb/model/movie.model';
-import { ErrorLog } from '@module/mongodb/model/errorLog.model';
-import { User } from './model/user.model';
+import { ErrorLog } from 'src/model/errorLog.model';
+import { User } from './user.model';
 
 @Injectable()
 export class MongodbService {
     constructor(
         @Inject(ConfigService) private configService: IConfigService,
         @InjectModel(User.name) private readonly userModel: Model<User>,
-        @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
         @InjectModel(ErrorLog.name) private readonly errorLogModel: Model<ErrorLog>,
     ) {
         if (this.configService.get('debug_mongoose_model')) {
@@ -33,10 +31,6 @@ export class MongodbService {
 
     get User() {
         return this.userModel;
-    }
-
-    get Movie() {
-        return this.movieModel;
     }
 
     get ErrorLog() {

@@ -1,7 +1,5 @@
+import { LOCK_ACTION_TYPE } from './lock-action.const';
 export interface ILockActionMetadata {
-    lockType: TLockActionType;
+    lockType: ConstValue<typeof LOCK_ACTION_TYPE>;
     lockTime?: number; // in second
 }
-
-export type TLockActionType = 'signup' | 'login';
-export type TLockActionTypeObj = MappedTypeConst<TLockActionType>;

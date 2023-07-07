@@ -2,14 +2,16 @@ import { SchemaFactory, Prop, Schema } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
-export class Movie extends Document {
-    @Prop({ required: true })
-    title: string;
+export class Product extends Document {
+    @Prop({ type: String, required: true })
+    name: string;
 
+    @Prop({ type: Date })
     createdAt: Date;
+    @Prop({ type: Date })
     updatedAt: Date;
 }
 
-export const MovieSchema = SchemaFactory.createForClass(Movie)
+export const ProductSchema = SchemaFactory.createForClass(Product)
     .set('versionKey', false)
     .set('timestamps', { createdAt: true, updatedAt: true });

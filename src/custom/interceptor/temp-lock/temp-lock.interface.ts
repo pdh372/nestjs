@@ -1,8 +1,6 @@
+import { TEMP_LOCK_TYPE } from './temp-lock.const';
 export interface ITempLockMetadata {
-    lockType: TTempLockType;
+    lockType: ConstValue<typeof TEMP_LOCK_TYPE>;
     maxAttempt?: number;
     lockTime?: number; // in minute
 }
-
-export type TTempLockType = 'signup' | 'login' | 'refresh_token';
-export type TTempLockTypeObj = MappedTypeConst<TTempLockType>;

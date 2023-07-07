@@ -3,7 +3,7 @@ import { Injectable, Module } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { EncryptService } from '@helper/encrypt.helper';
-import { ICreateSchema } from '../mongodb.interface';
+import { ICreateSchema } from '../module/mongodb/mongodb.interface';
 import { EncryptModule } from '@helper/encrypt.helper';
 
 @Schema()

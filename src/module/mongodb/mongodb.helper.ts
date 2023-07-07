@@ -1,9 +1,8 @@
 import { ModelDefinition } from '@nestjs/mongoose';
 import { IAsyncModelFactory } from './mongodb.interface';
 
-import { UserModelService, UserModelModule } from './model/user.model';
-import { Movie, MovieSchema } from './model/movie.model';
-import { ErrorLog, ErrorLogSchema } from '@module/mongodb/model/errorLog.model';
+import { UserModelService, UserModelModule } from '@model/user.model';
+import { ErrorLog, ErrorLogSchema } from '@model/errorLog.model';
 
 export const factories: IAsyncModelFactory[] = [
     {
@@ -16,7 +15,4 @@ export const factories: IAsyncModelFactory[] = [
     },
 ];
 
-export const models: ModelDefinition[] = [
-    { name: Movie.name, schema: MovieSchema },
-    { name: ErrorLog.name, schema: ErrorLogSchema },
-];
+export const models: ModelDefinition[] = [{ name: ErrorLog.name, schema: ErrorLogSchema }];

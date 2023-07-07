@@ -18,5 +18,5 @@ export const JWT = {
 // REDIS
 export const REDIS = {
     WRITER: Symbol('writer'),
-    THROTTLER: Symbol('throttler'),
+    // THROTTLER: Symbol('throttler'),
 };

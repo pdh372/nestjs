@@ -11,7 +11,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
-import { MongodbService } from '@module/mongodb/mongodb.service';
+import { MongodbService } from 'src/model';
 import { Response } from 'express';
 import { IWriteHttpErrorLog, IWriteWsErrorLog, ILogInternal, ILogValidate } from './global-exception.interface';
 import { Socket } from 'socket.io';
