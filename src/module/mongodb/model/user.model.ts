@@ -5,25 +5,16 @@ import { Document, Types } from 'mongoose';
 import { EncryptService } from '@helper/encrypt.helper';
 import { ICreateSchema } from '../mongodb.interface';
 import { EncryptModule } from '@helper/encrypt.helper';
-import { IProfileJson } from '@module/strategy-passport';
 
 @Schema()
 export class User extends Document {
     _id: Types.ObjectId;
 
-    @Prop({ required: true, type: String, unique: true })
-    account: string;
-
-    @Prop({ required: true, type: String })
-    signupType: string;
-
     @Prop({ required: true })
     password: string;
 
     @Prop({ type: Object })
-    secretMetadata: {
-        passport: IProfileJson;
-    };
+    secretMetadata: any;
 
     createdAt: Date;
     updatedAt: Date;

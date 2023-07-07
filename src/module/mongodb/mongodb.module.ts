@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@module/mongodb/mongodb.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Global, Module } from '@nestjs/common';
-import { factories, models } from '@repository/mongodb/mongodb.helper';
+import { factories, models } from '@module/mongodb/mongodb.helper';
 
 @Global()
 @Module({

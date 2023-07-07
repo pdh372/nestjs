@@ -13,7 +13,6 @@ async function bootstrap() {
     // middlewares
     app.enableCors(appService.corsOption);
     app.use(appService.middlewares);
-    app.useWebSocketAdapter(await appService.createAdapter(app));
 
     await app.listen(appService.port, async () => {
         const url = await app.getUrl();

@@ -39,7 +39,7 @@ export class ServiceModule {
                         privateKey: configService.get(role.privateKey),
                         // @ts-ignore
                         secret: configService.get(role.secret),
-                        verifyOptions: { ignoreExpiration: configService.get('node_env') === ENV.Development },
+                        verifyOptions: { ignoreExpiration: configService.get('node_env') === ENV.dev },
                     });
                 },
                 inject: [ConfigService],

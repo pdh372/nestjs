@@ -18,7 +18,7 @@ class EnvironmentVariables {
     APP_NAME: string;
 
     @IsEnum(ENV)
-    NODE_ENV: ENV;
+    NODE_ENV: ConstValue<typeof ENV>;
 
     @IsNumber()
     PORT: number;
@@ -94,24 +94,6 @@ class EnvironmentVariables {
     JWT_PUBLIC_KEY: string;
     @IsString()
     JWT_SECRET_KEY: string;
-
-    // Passport
-    @IsString()
-    PASSPORT_FE_URL: string;
-    @IsString()
-    PASSPORT_BE_CB: string;
-
-    // Passport Google
-    @IsString()
-    PASSPORT_GOOGLE_CLIENT_ID: string;
-    @IsString()
-    PASSPORT_GOOGLE_CLIENT_SECRET: string;
-
-    // Passport Github
-    @IsString()
-    PASSPORT_GITHUB_CLIENT_ID: string;
-    @IsString()
-    PASSPORT_GITHUB_CLIENT_SECRET: string;
 }
 
 export function validateEnvironment(config: Record<string, unknown>) {

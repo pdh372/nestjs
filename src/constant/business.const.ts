@@ -5,6 +5,4 @@ export const SEX = {
 
 export const SIGN_UP_TYPE = {
     LOCAL: 'local',
-    GOOGLE: 'google',
-    GITHUB: 'github',
 };

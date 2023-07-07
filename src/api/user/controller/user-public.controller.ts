@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {
     Body,
     Controller,
@@ -6,27 +5,22 @@ import {
     Req,
     HttpException,
     HttpStatus,
-    HttpCode,
     UnauthorizedException,
     UseFilters,
     ConflictException,
-    Get,
-    Res,
     Inject,
 } from '@nestjs/common';
 import { AuthService } from '@service/auth/auth.service';
 import { UserSignUpDTO, RefreshTokenDTO } from '@api/user/user.dto';
-import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@module/mongodb/mongodb.service';
 import { ERROR_AUTH, ERROR_USER } from '@constant/error.const';
 import { hashPassword } from '@util/string';
-import { userSerialization } from '@serialization/user.serialization';
+import { userSerialization } from '@serialization/index';
 import { LA_TYPE, LockAction } from '@interceptor/lock-action';
 import { TL_TYPE, TempLock } from '@interceptor/temp-lock';
 import { AuthenException } from '@exception/authen';
-import { LocalPassport, GooglePassport, GithubPassport } from '@module/strategy-passport';
 import { USER_ROUTE_PUBLIC } from '@api/api.router';
 import { SIGN_UP_TYPE } from '@constant/business.const';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 const { CONTROLLER, ROUTE } = USER_ROUTE_PUBLIC;
@@ -117,43 +111,5 @@ export class UserPublicController {
         return {
             accessToken,
         };
-    }
-
-    @LocalPassport()
-    @HttpCode(HttpStatus.OK)
-    @Post(ROUTE.LOGIN_LOCAL)
-    async loginLocal(@Req() req: IAppReq) {
-        return {
-            token: this.authService.signUserToken({ _id: req.user._id }),
-            user: userSerialization(req.user),
-        };
-    }
-
-    @GooglePassport()
-    @Get(ROUTE.LOGIN_GOOGLE)
-    async loginGoogle() {}
-
-    @GooglePassport()
-    @Get(ROUTE.LOGIN_GOOGLE_CB)
-    async loginGoogleCB(@Req() req: IAppReq, @Res() res: Response) {
-        const refreshToken =
-            req.user.signupType === SIGN_UP_TYPE.GOOGLE
-                ? this.authService.signUserRefreshToken({ _id: req.user._id }).refreshToken
-                : '';
-        res.redirect(`${this.configService.get('passport.response_fe')}${refreshToken}`);
-    }
-
-    @GithubPassport()
-    @Get(ROUTE.LOGIN_GITHUB)
-    async loginGithub() {}
-
-    @GithubPassport()
-    @Get(ROUTE.LOGIN_GITHUB_CB)
-    async loginGithubCB(@Req() req: IAppReq, @Res() res: Response) {
-        const refreshToken =
-            req.user.signupType === SIGN_UP_TYPE.GITHUB
-                ? this.authService.signUserRefreshToken({ _id: req.user._id }).refreshToken
-                : '';
-        res.redirect(`${this.configService.get('passport.response_fe')}${refreshToken}`);
     }
 }

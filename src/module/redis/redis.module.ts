@@ -1,8 +1,7 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ICreateRedisInstance, IRedisModuleOption } from './redis.interface';
-import { newRedisClient, RedisWriter, RedisAdapter } from './redis.service';
+import { newRedisClient, RedisWriter } from './redis.service';
 import { ConfigService } from '@nestjs/config';
-
 @Global()
 @Module({})
 export class RedisModule {
@@ -25,9 +24,8 @@ export class RedisModule {
                     inject: [ConfigService],
                 })),
                 RedisWriter,
-                RedisAdapter,
             ],
-            exports: [RedisWriter, RedisAdapter],
+            exports: [RedisWriter],
         };
     }
 }

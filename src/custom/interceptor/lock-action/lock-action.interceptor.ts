@@ -9,12 +9,12 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { ERROR_COMMON } from '@constant/error.const';
-import { RedisWriter } from 'src/module/redis/redis.service';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ILockActionMetadata } from './lock-action.interface';
 import { LOCK_ACTION_KEY } from './lock-action.const';
 import { tap, catchError, throwError } from 'rxjs';
+import { RedisWriter } from '@module/redis/redis.service';
 
 @Injectable()
 export class LockActionInterceptor implements NestInterceptor {

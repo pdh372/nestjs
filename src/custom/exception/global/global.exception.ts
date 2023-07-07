@@ -11,7 +11,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ENV } from '@constant/config.const';
-import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@module/mongodb/mongodb.service';
 import { Response } from 'express';
 import { IWriteHttpErrorLog, IWriteWsErrorLog, ILogInternal, ILogValidate } from './global-exception.interface';
 import { Socket } from 'socket.io';
@@ -63,8 +63,8 @@ export class AllHttpException implements ExceptionFilter {
         });
 
         return {
-            errorId: this.configService.get('node_env') === ENV.Staging ? errorLog?._id : undefined,
-            errorDev: this.configService.get('node_env') === ENV.Development ? errorLog : undefined,
+            errorId: this.configService.get('node_env') === ENV.staging ? errorLog?._id : undefined,
+            errorDev: this.configService.get('node_env') === ENV.dev ? errorLog : undefined,
         };
     }
 
@@ -86,7 +86,7 @@ export class AllHttpException implements ExceptionFilter {
 
     private showLogValidateDetail({ exception, error }: ILogValidate) {
         if (
-            [ENV.Development, ENV.Staging].includes(this.configService.get('node_env') as ENV) &&
+            [ENV.dev, ENV.staging].includes(this.configService.get('node_env') as ConstValue<typeof ENV>) &&
             error instanceof BadRequestException
         ) {
             return (exception.getResponse() as unknown as any)?.message;
@@ -136,8 +136,8 @@ export class AllWsExceptionsFilter implements WsExceptionFilter {
         });
 
         return {
-            errorId: this.configService.get('node_env') === ENV.Staging ? errorLog?._id : undefined,
-            errorDev: this.configService.get('node_env') === ENV.Development ? errorLog : undefined,
+            errorId: this.configService.get('node_env') === ENV.staging ? errorLog?._id : undefined,
+            errorDev: this.configService.get('node_env') === ENV.dev ? errorLog : undefined,
         };
     }
 }

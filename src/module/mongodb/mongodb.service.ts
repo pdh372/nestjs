@@ -6,8 +6,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 // models
-import { Movie } from '@repository/mongodb/model/movie.model';
-import { ErrorLog } from '@repository/mongodb/model/errorLog.model';
+import { Movie } from '@module/mongodb/model/movie.model';
+import { ErrorLog } from '@module/mongodb/model/errorLog.model';
 import { User } from './model/user.model';
 
 @Injectable()

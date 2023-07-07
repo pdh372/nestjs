@@ -2,7 +2,7 @@ import { Request } from 'express';
 import session from 'express-session';
 import { Details } from 'express-useragent';
 import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@interface/config.interface';
+import { APP_DATA_CONFIG } from 'src/constant/config.const';
 
 type IAppSession = session.Session & Partial<session.SessionData> & Record<string, any>;
 
@@ -22,7 +22,9 @@ declare global {
         lockTime: number; // in minute
     }
 
-    type IConfigService = ConfigService<IAppConfig>;
+    type IConfigService = ConfigService<ReturnType<typeof APP_DATA_CONFIG>>;
+
+    type ConstValue<T> = T extends Record<string | number | symbol, infer U> ? U : never;
 }
 
 export {};

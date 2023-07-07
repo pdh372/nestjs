@@ -4,9 +4,7 @@ import { Types } from 'mongoose';
 import * as IT from '@constant/injection-token.const';
 import { IUserVerified } from '@service/auth/auth.interface';
 import { ERROR_AUTH } from '@constant/error.const';
-import { MongodbService } from '@repository/mongodb/mongodb.service';
-import { comparePassword } from '@util/string';
-import { User } from '@repository/mongodb/model/user.model';
+import { MongodbService } from '@module/mongodb/mongodb.service';
 
 export class AuthService {
     constructor(

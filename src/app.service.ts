@@ -1,4 +1,4 @@
-import { INestApplication, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as useragent from 'express-useragent';
 import * as hpp from 'hpp';
@@ -8,15 +8,10 @@ import * as session from 'express-session';
 import * as connectMongoDbSession from 'connect-mongodb-session';
 import { ENV } from '@constant/config.const';
 import { appColor } from '@helper/chalk.helper';
-import { RedisIoAdapter } from '@module/gateway/gateway.adapter';
-import { RedisAdapter } from '@module/redis/redis.service';
 
 @Injectable()
 export class AppService {
-    constructor(
-        @Inject(ConfigService) private readonly configService: IConfigService,
-        private readonly redisAdapter: RedisAdapter,
-    ) {}
+    constructor(@Inject(ConfigService) private readonly configService: IConfigService) {}
 
     private get session() {
         const MongoDBStore = connectMongoDbSession(session);
@@ -47,7 +42,7 @@ export class AppService {
                 sameSite: 'strict',
 
                 // Set to true, tell client don't send cookie back if client don't using https
-                secure: ENV.Development !== this.configService.get('node_env'),
+                secure: ENV.dev !== this.configService.get('node_env'),
             },
         });
     }
@@ -110,11 +105,5 @@ export class AppService {
                 return compression.filter(req, res);
             },
         });
-    }
-
-    async createAdapter(app: INestApplication) {
-        const redisIoAdapter = new RedisIoAdapter(app);
-        await redisIoAdapter.connectToRedis({ redis: this.redisAdapter.client, configService: this.configService });
-        return redisIoAdapter;
     }
 }

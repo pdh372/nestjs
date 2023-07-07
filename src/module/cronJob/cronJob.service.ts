@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 // import { Cron, CronExpression } from '@nestjs/schedule';
-import { MongodbService } from '@repository/mongodb/mongodb.service';
+import { MongodbService } from '@module/mongodb/mongodb.service';
 
 @Injectable()
 export class CronJobService {

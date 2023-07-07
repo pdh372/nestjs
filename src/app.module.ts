@@ -1,20 +1,18 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { MorganInterceptor } from '@interceptor/morgan';
-import { MongodbModule } from '@repository/mongodb/mongodb.module';
+import { MongodbModule } from '@module/mongodb/mongodb.module';
 import { ApiModule } from '@api/api.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_DATA_CONFIG, ENV_FILE_PATH } from '@constant/config.const';
 import { DataBaseModule } from '@helper/database.helper';
 import { AppService } from 'src/app.service';
 import { validateEnvironment } from '@helper/validate-env.helpers';
-import { GatewayModule } from '@module/gateway/gateway.module';
-import { SOCKET_PROVIDERS } from '@socket/index.socket';
-import { RedisModule } from '@module/redis/redis.module';
-import * as INJECT_TOKEN from '@constant/injection-token.const';
 import { AllHttpException } from '@exception/global/global.exception';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronJobService } from '@module/cronJob/cronJob.service';
+import { RedisModule } from '@module/redis/redis.module';
+import * as INJECT_TOKEN from '@constant/injection-token.const';
 @Module({
     imports: [
         // ENV
@@ -34,18 +32,9 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
         // Controller
         ApiModule,
 
-        // Socket
-        GatewayModule.forRoot({
-            providers: SOCKET_PROVIDERS,
-        }),
-
         // Cache
         RedisModule.forRoot({
-            configs: [
-                { it: INJECT_TOKEN.REDIS.ADAPTER },
-                { it: INJECT_TOKEN.REDIS.WRITER },
-                { it: INJECT_TOKEN.REDIS.THROTTLER },
-            ],
+            configs: [{ it: INJECT_TOKEN.REDIS.WRITER }, { it: INJECT_TOKEN.REDIS.THROTTLER }],
         }),
 
         // Cron Job
@@ -64,7 +53,9 @@ import { CronJobService } from '@module/cronJob/cronJob.service';
                 whitelist: true,
                 transform: true,
                 forbidNonWhitelisted: true,
-                validateCustomDecorators: false, // If true maybe bug when set return req.user
+
+                // If true maybe bug when set return req.user
+                validateCustomDecorators: false,
             }),
         },
         {
